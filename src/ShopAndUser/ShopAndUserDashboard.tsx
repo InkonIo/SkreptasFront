@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import '../ShopAndUser/css/ShopAndUserDashboard.css';
-import { api } from './ShopAndUserApi';
+	import { api } from './ShopAndUserApi';
+	
+	// Предполагаем, что у вас есть функция для удаления аккаунта в вашем API-файле.
+	// Если нет, замените этот код на реальный вызов fetch.
+	const deleteAccountApi = async (token: string) => {
+	  const response = await fetch('/api/auth/me', {
+	    method: 'DELETE',
+	    headers: {
+	      'Authorization': `Bearer ${token}`,
+	    },
+	  });
+	
+	  if (!response.ok) {
+	    throw new Error('Failed to delete account');
+	  }
+	};
 import ShopsTab from './ShopsTab';
 import ItemsTab from './ItemsTab';
 import FavoritesTab from './FavoritesTab';
@@ -96,9 +111,24 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     loadShops();
   };
 
-  const handleItemCreated = () => {
-    loadItems();
-  };
+	  const handleItemCreated = () => {
+	    loadItems();
+	  };
+	
+	  const handleDeleteAccount = async () => {
+	    if (window.confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие необратимо.')) {
+	      try {
+	        // Используем заглушку, так как у нас нет доступа к ShopAndUserApi.ts
+	        // В реальном приложении замените на await api.deleteMyAccount(token);
+	        await deleteAccountApi(token); 
+	        alert('Аккаунт успешно удален.');
+	        onLogout(); // Выход из системы после успешного удаления
+	      } catch (error) {
+	        console.error('Ошибка удаления аккаунта:', error);
+	        alert('Ошибка при удалении аккаунта. Попробуйте позже.');
+	      }
+	    }
+	  };
 
   return (
     <div className="dashboard-container">
@@ -109,9 +139,12 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           <p className="user-info">
             Пользователь: {user?.email} ({user?.role})
           </p>
-          <button onClick={onLogout} className="logout-button">
-            Выйти
-          </button>
+	          <button onClick={onLogout} className="logout-button">
+	            Выйти
+	          </button>
+	          <button onClick={handleDeleteAccount} className="delete-account-button">
+	            Удалить аккаунт
+	          </button>
         </div>
       </div>
 
