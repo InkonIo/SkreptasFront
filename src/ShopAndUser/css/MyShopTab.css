@@ -1,0 +1,279 @@
+/* MyShopTab.css */
+
+.my-shop-container {
+    padding: 20px;
+}
+
+.my-shop-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.shop-form-title, .item-form-title, .my-items-title {
+    font-size: 1.5rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.shop-form, .item-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 30px;
+}
+
+.form-input, .form-textarea, .form-select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.form-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-file-group {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.form-file-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.file-selected-info {
+    display: block;
+    margin-top: 5px;
+    color: #10b981;
+    font-size: 0.9rem;
+}
+
+.form-checkbox-group {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.form-checkbox-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.checkbox-item {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.checkbox-item input {
+    margin-right: 8px;
+}
+
+.category-warning {
+    color: #ef4444;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.form-submit-btn {
+    padding: 12px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color 0.2s ease;
+}
+
+.form-submit-btn:hover {
+    background-color: #2563eb;
+}
+
+/* Shop Info Card */
+.shop-info-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shop-info-card.approved {
+    background-color: #f0fdf4; /* Light green for approved */
+    border-color: #d1fae5;
+}
+
+.shop-info-card.pending {
+    background-color: #fffbeb; /* Light yellow for pending */
+    border-color: #fde68a;
+}
+
+.shop-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.shop-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.shop-details {
+    flex: 1;
+}
+
+.shop-name {
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    color: #1a1a1a;
+}
+
+.shop-description, .shop-meta {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.shop-status {
+    margin: 15px 0 0 0;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.shop-status.approved {
+    color: #059669;
+}
+
+.shop-status.pending {
+    color: #d97706;
+}
+
+.shop-categories {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+}
+
+/* My Shop Items List */
+.my-shop-items-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.my-shop-item-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.my-shop-item-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-shop-item-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.my-shop-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.my-shop-item-details {
+    flex: 1;
+}
+
+.my-shop-item-title {
+    font-size: 1.2rem;
+    margin: 0 0 8px 0;
+    color: #1a1a1a;
+}
+
+.my-shop-item-meta {
+    margin: 5px 0;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.my-shop-item-actions {
+    margin-top: 10px;
+}
+
+.my-shop-item-edit-btn {
+    padding: 6px 12px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 10px;
+}
+
+.my-shop-item-delete-btn {
+    padding: 6px 12px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Instagram Link Button */
+.instagram-link-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #E1306C; /* Instagram brand color */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+.instagram-link-btn:hover {
+    background-color: #C13584;
+}

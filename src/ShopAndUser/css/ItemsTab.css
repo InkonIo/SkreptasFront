@@ -1,0 +1,128 @@
+/* ItemsTab.css */
+
+.items-container {
+    padding: 20px;
+}
+
+.items-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.items-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.item-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.item-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-images {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.item-image-more {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.item-title {
+    font-size: 1.2rem;
+    margin: 0 0 8px 0;
+    color: #1a1a1a;
+}
+
+.item-description {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.item-meta {
+    margin: 5px 0;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.item-tags {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+}
+
+.item-stats {
+    color: #888;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 10px;
+}
+
+.item-favorite-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-weight: 600;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.item-favorite-btn.is-favorite {
+    background-color: #ef4444; /* Red for remove */
+}
+
+.item-favorite-btn.is-favorite:hover {
+    background-color: #dc2626;
+}
+
+.item-favorite-btn:not(.is-favorite) {
+    background-color: #10b981; /* Green for add */
+}
+
+.item-favorite-btn:not(.is-favorite):hover {
+    background-color: #059669;
+}

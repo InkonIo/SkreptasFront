@@ -1,0 +1,103 @@
+/* ShopsTab.css */
+
+.shops-container {
+    padding: 20px;
+}
+
+.shops-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.shops-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.shop-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.shop-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop-card.approved {
+    background-color: #f0fdf4; /* Light green for approved */
+}
+
+.shop-card.pending {
+    background-color: #fffbeb; /* Light yellow for pending */
+}
+
+.shop-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.shop-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.shop-details {
+    flex: 1;
+}
+
+.shop-name {
+    font-size: 1.2rem;
+    margin: 0 0 8px 0;
+    color: #1a1a1a;
+}
+
+.shop-description {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.shop-meta {
+    margin: 5px 0;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.shop-status {
+    margin: 5px 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.shop-status.approved {
+    color: #059669;
+}
+
+.shop-status.pending {
+    color: #d97706;
+}
+
+.shop-categories {
+    margin: 5px 0;
+    font-size: 0.85rem;
+    color: #4a4a4a;
+}
+
+.shop-owner {
+    color: #888;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+}

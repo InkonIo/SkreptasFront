@@ -1,242 +1,128 @@
-import { useState, useEffect } from 'react';
-import { api } from './services/api';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './auth/Login';
+import Register from './auth/Register';
+import ForgotPassword from './auth/ForgotPassword';
+import ResetPassword from './auth/ResetPassword';
+import AdminDashboard from './admin/AdminDashboard';
+import ShopAndUserDashboard from './ShopAndUser/ShopAndUserDashboard';
 
 function App() {
-  const [token, setToken] = useState<string>(localStorage.getItem('token') || '');
+  const storedToken = localStorage.getItem('token');
+  console.log('ðŸ”‘ Initial token from localStorage:', storedToken ? 'exists' : 'null/empty');
+  
+  const [token, setToken] = useState<string>(storedToken || '');
   const [user, setUser] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'login' | 'categories' | 'shops' | 'admin'>('login');
-
-  // Login
-  const [email, setEmail] = useState('inkonio@bk.ru');
-  const [password, setPassword] = useState('');
-
-  // Categories
-  const [categories, setCategories] = useState<any[]>([]);
-  const [newCategoryName, setNewCategoryName] = useState('');
-
-  // Shops
-  const [shops, setShops] = useState<any[]>([]);
-  const [pendingShops, setPendingShops] = useState<any[]>([]);
+  const [isTokenChecked, setIsTokenChecked] = useState(false);
 
   useEffect(() => {
+    console.log('ðŸ” Token check:', token ? 'Token exists' : 'No token');
     if (token) {
       localStorage.setItem('token', token);
-      loadCategories();
-      loadShops();
+      loadUserFromToken(token);
+    } else {
+      setIsTokenChecked(true);
     }
   }, [token]);
 
-  const handleLogin = async () => {
+  const loadUserFromToken = (accessToken: string) => {
     try {
-      const response = await api.login({ email, password });
-      if (response.accessToken) {
-        setToken(response.accessToken);
-        setUser(response.user);
-        alert('Вход успешен!');
-      } else {
-        alert('Ошибка входа: ' + JSON.stringify(response));
+      const parts = accessToken.split('.');
+      if (parts.length !== 3) throw new Error('Invalid token format');
+      
+      const payload = JSON.parse(atob(parts[1]));
+      console.log('ðŸ“¦ Decoded JWT payload:', payload);
+      
+      // Ð’ÐÐ–ÐÐž: Ð£Ð±Ð¸Ñ€Ð°ÐµÐ¼ Ð¿Ñ€ÐµÑ„Ð¸ÐºÑ ROLE_ ÐµÑÐ»Ð¸ Ð¾Ð½ ÐµÑÑ‚ÑŒ
+      let role = payload.role || '';
+      if (role.startsWith('ROLE_')) {
+        role = role.substring(5);
       }
-    } catch (error) {
-      alert('Ошибка: ' + error);
+      
+      const userData = {
+        email: payload.sub,
+        role: role,
+      };
+      
+      console.log('ðŸ‘¤ User data:', userData);
+      setUser(userData);
+    } catch (e) {
+      console.error('âŒ Error decoding token:', e);
+      handleLogout();
+    } finally {
+      setIsTokenChecked(true);
     }
+  };
+
+  const handleLoginSuccess = (accessToken: string, userData: any) => {
+    console.log('âœ… Login success - Token:', accessToken);
+    console.log('âœ… Login success - User:', userData);
+    
+    localStorage.setItem('token', accessToken);
+    setToken(accessToken);
+    setUser(userData);
+    
+    alert('Ð’Ñ…Ð¾Ð´ ÑƒÑÐ¿ÐµÑˆÐµÐ½!');
   };
 
   const handleLogout = () => {
+    console.log('ðŸšª Logging out...');
     setToken('');
     setUser(null);
     localStorage.removeItem('token');
-    setActiveTab('login');
   };
 
-  const loadCategories = async () => {
-    try {
-      const data = await api.getCategories();
-      setCategories(data);
-    } catch (error) {
-      console.error('Ошибка загрузки категорий:', error);
-    }
-  };
-
-  const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) {
-      alert('Введите название категории');
-      return;
-    }
-    try {
-      await api.createCategory(
-        {
-          name: newCategoryName,
-          parentId: null,
-          icon: 'icon',
-          position: 1,
-          isActive: true,
-        },
-        token
-      );
-      alert('Категория создана!');
-      setNewCategoryName('');
-      loadCategories();
-    } catch (error) {
-      alert('Ошибка: ' + error);
-    }
-  };
-
-  const loadShops = async () => {
-    try {
-      const data = await api.getShops();
-      setShops(data);
-    } catch (error) {
-      console.error('Ошибка загрузки магазинов:', error);
-    }
-  };
-
-  const loadPendingShops = async () => {
-    try {
-      const data = await api.getPendingShops(token);
-      setPendingShops(data);
-    } catch (error) {
-      console.error('Ошибка:', error);
-    }
-  };
-
-  const handleApproveShop = async (shopId: number) => {
-    try {
-      await api.approveShop(shopId, token);
-      alert('Магазин одобрен!');
-      loadPendingShops();
-      loadShops();
-    } catch (error) {
-      alert('Ошибка: ' + error);
-    }
-  };
-
-  if (!token) {
+  if (!isTokenChecked) {
     return (
-      <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-        <h1>Вход в систему</h1>
-        <div style={{ marginBottom: '10px' }}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ padding: '8px', width: '300px' }}
-          />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <input
-            type="password"
-            placeholder="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: '8px', width: '300px' }}
-          />
-        </div>
-        <button onClick={handleLogin} style={{ padding: '8px 20px' }}>
-          Войти
-        </button>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ°...
       </div>
     );
   }
 
+  console.log('ðŸŽ¯ Current user role:', user?.role);
+
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <div style={{ marginBottom: '20px', borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>
-        <h1>Skrepta Admin</h1>
-        <p>
-          Пользователь: {user?.email} ({user?.role})
-        </p>
-        <button onClick={handleLogout} style={{ padding: '5px 10px' }}>
-          Выйти
-        </button>
-      </div>
-
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={() => setActiveTab('categories')} style={{ marginRight: '10px', padding: '8px' }}>
-          Категории
-        </button>
-        <button onClick={() => setActiveTab('shops')} style={{ marginRight: '10px', padding: '8px' }}>
-          Магазины
-        </button>
-        {user?.role === 'ADMIN' && (
-          <button
-            onClick={() => {
-              setActiveTab('admin');
-              loadPendingShops();
-            }}
-            style={{ padding: '8px' }}
-          >
-            Админка
-          </button>
+    <Router>
+      <Routes>
+        {/* Ð•ÑÐ»Ð¸ Ð½Ðµ Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð¾Ð²Ð°Ð½ - Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð°Ñ†Ð¸Ð¸ */}
+        {!token || !user ? (
+          <>
+            <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </>
+        ) : (
+          <>
+            {/* Ð•ÑÐ»Ð¸ Ð°Ð´Ð¼Ð¸Ð½ - Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚ Ð½Ð° /panel-admin */}
+            {user.role === 'ADMIN' && (
+              <>
+                <Route path="/" element={<Navigate to="/panel-admin" replace />} />
+                <Route path="/panel-admin" element={<AdminDashboard token={token} user={user} onLogout={handleLogout} />} />
+                <Route path="*" element={<Navigate to="/panel-admin" replace />} />
+              </>
+            )}
+            
+            {/* Ð•ÑÐ»Ð¸ Ð¾Ð±Ñ‹Ñ‡Ð½Ñ‹Ð¹ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð¸Ð»Ð¸ SHOP */}
+            {user.role !== 'ADMIN' && (
+              <>
+                <Route path="/" element={<ShopAndUserDashboard token={token} user={user} onLogout={handleLogout} />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </>
+            )}
+          </>
         )}
-      </div>
-
-      {activeTab === 'categories' && (
-        <div>
-          <h2>Категории</h2>
-          {user?.role === 'ADMIN' && (
-            <div style={{ marginBottom: '20px' }}>
-              <input
-                type="text"
-                placeholder="Название категории"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                style={{ padding: '8px', width: '300px', marginRight: '10px' }}
-              />
-              <button onClick={handleCreateCategory} style={{ padding: '8px' }}>
-                Создать
-              </button>
-            </div>
-          )}
-          <ul>
-            {categories.map((cat) => (
-              <li key={cat.id}>
-                {cat.name} (ID: {cat.id})
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {activeTab === 'shops' && (
-        <div>
-          <h2>Магазины</h2>
-          <ul>
-            {shops.map((shop) => (
-              <li key={shop.id}>
-                <strong>{shop.name}</strong> - {shop.city} - {shop.approved ? '✅ Одобрен' : '⏳ На модерации'}
-                <br />
-                <small>Владелец: {shop.owner?.email}</small>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {activeTab === 'admin' && user?.role === 'ADMIN' && (
-        <div>
-          <h2>Админ панель</h2>
-          <h3>Магазины на модерации</h3>
-          {pendingShops.length === 0 ? (
-            <p>Нет магазинов на модерации</p>
-          ) : (
-            <ul>
-              {pendingShops.map((shop) => (
-                <li key={shop.id}>
-                  <strong>{shop.name}</strong> - {shop.city}
-                  <br />
-                  <small>Владелец: {shop.owner?.email}</small>
-                  <br />
-                  <button onClick={() => handleApproveShop(shop.id)} style={{ marginTop: '5px', padding: '5px' }}>
-                    Одобрить
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </div>
+      </Routes>
+    </Router>
   );
 }
 

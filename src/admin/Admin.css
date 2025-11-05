@@ -1,0 +1,142 @@
+.admin-container {
+    padding: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.admin-header h1 {
+    margin: 0;
+    color: #667eea;
+    font-size: 24px;
+}
+
+.admin-header span {
+    color: #666;
+    margin-right: 15px;
+}
+
+.admin-nav {
+    margin-bottom: 25px;
+    display: flex;
+    gap: 12px;
+}
+
+.admin-nav button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    color: #667eea;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-nav button:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.admin-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.admin-section-title {
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.admin-list {
+    list-style: none;
+    padding: 0;
+}
+
+
+.admin-list li {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    color: #333;
+}
+
+.admin-list li strong {
+    color: #1f2937;
+    font-size: 16px;
+}
+
+.admin-list li small {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.admin-list li:hover {
+    background: #f8f9ff;
+}
+
+.admin-list li:last-child {
+    border-bottom: none;
+}
+
+.admin-action-button {
+    padding: 8px 16px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #10b981;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.admin-action-button.danger {
+    background-color: #ef4444;
+}
+
+.admin-action-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.admin-error {
+    color: #ef4444;
+    background: #fef2f2;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid #ef4444;
+    margin-bottom: 15px;
+}
+
+select {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
