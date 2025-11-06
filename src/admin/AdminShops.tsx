@@ -82,7 +82,7 @@ const AdminShops: React.FC<AdminShopsProps> = ({ token, onLogout }) => {
       <h2 className="admin-section-title">Магазины на модерации</h2>
       <button onClick={loadPendingShops} className="admin-action-button" style={{ marginBottom: '15px' }}>Обновить список</button>
       {pendingShops.length === 0 ? (
-        <p>Нет магазинов на модерации.</p>
+        <p className='NoneOfShop'>Нет магазинов на модерации.</p>
       ) : (
         <ul className="admin-list">
           {pendingShops.map((shop) => (
