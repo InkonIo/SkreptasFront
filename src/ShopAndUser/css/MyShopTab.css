@@ -277,3 +277,28 @@
 .instagram-link-btn:hover {
     background-color: #C13584;
 }
+
+
+.file-compressing-info {
+  display: block;
+  margin-top: 8px;
+  color: #ff9800;
+  font-weight: 500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.file-selected-info {
+  display: block;
+  margin-top: 8px;
+  color: #4caf50;
+  font-weight: 500;
+}

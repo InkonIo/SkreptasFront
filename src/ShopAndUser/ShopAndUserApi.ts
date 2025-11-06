@@ -65,14 +65,12 @@ export const api = {
     formData.append('city', data.city);
     formData.append('address', data.address || '');
     
-    // Добавляем categoryIds как отдельные параметры
     if (data.categoryIds && data.categoryIds.length > 0) {
       data.categoryIds.forEach((id: number) => {
         formData.append('categoryIds', id.toString());
       });
     }
     
-    // Если есть файл логотипа
     if (data.logoFile) {
       formData.append('logoFile', data.logoFile);
     }
@@ -130,14 +128,12 @@ export const api = {
     formData.append('categoryId', data.categoryId.toString());
     formData.append('city', data.city || '');
     
-    // Добавляем теги
     if (data.tags && data.tags.length > 0) {
       data.tags.forEach((tag: string) => {
         formData.append('tags', tag);
       });
     }
     
-    // Добавляем файлы изображений
     if (data.imageFiles && data.imageFiles.length > 0) {
       data.imageFiles.forEach((file: File) => {
         formData.append('imageFiles', file);
@@ -201,6 +197,23 @@ export const api = {
       headers: { 'Authorization': `Bearer ${token}` },
     });
     if (!response.ok) throw new Error('Failed to remove from favorites');
+    return response.text();
+  },
+
+  // Auth
+  deleteMyAccount: async (token: string) => {
+    const response = await fetch(`${BASE_URL}/api/auth/me`, {
+      method: 'DELETE',
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    });
+    if (!response.ok) {
+      const error: any = new Error('Failed to delete account');
+      error.status = response.status;
+      throw error;
+    }
     return response.text();
   },
 
