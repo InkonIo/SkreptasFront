@@ -201,6 +201,82 @@ export const api = {
   },
 
   // Auth
+  login: async (credentials: any) => {
+    const response = await fetch(`${BASE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+    });
+    if (!response.ok) {
+      const error: any = new Error('Login failed');
+      error.status = response.status;
+      try {
+        error.details = await response.json();
+      } catch (e) {
+        error.details = { message: response.statusText };
+      }
+      throw error;
+    }
+    return response.json();
+  },
+
+  register: async (data: any) => {
+    const response = await fetch(`${BASE_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error: any = new Error('Registration failed');
+      error.status = response.status;
+      try {
+        error.details = await response.json();
+      } catch (e) {
+        error.details = { message: response.statusText };
+      }
+      throw error;
+    }
+    return response.json();
+  },
+
+  forgotPassword: async (email: string) => {
+    const response = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (!response.ok) {
+      const error: any = new Error('Forgot password failed');
+      error.status = response.status;
+      try {
+        error.details = await response.json();
+      } catch (e) {
+        error.details = { message: response.statusText };
+      }
+      throw error;
+    }
+    return response;
+  },
+
+  resetPassword: async (token: string, newPassword: string) => {
+    const response = await fetch(`${BASE_URL}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, newPassword }),
+    });
+    if (!response.ok) {
+      const error: any = new Error('Reset password failed');
+      error.status = response.status;
+      try {
+        error.details = await response.json();
+      } catch (e) {
+        error.details = { message: response.statusText };
+      }
+      throw error;
+    }
+    return response;
+  },
+
   deleteMyAccount: async (token: string) => {
     const response = await fetch(`${BASE_URL}/api/auth/me`, {
       method: 'DELETE',

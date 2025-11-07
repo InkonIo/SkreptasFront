@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import api from '../api';
 import './Login.css';
 
+type AuthView = 'login' | 'register' | 'forgot-password' | 'reset-password' | null;
+
 interface LoginProps {
   onLoginSuccess: (token: string, user: any) => void;
+  onSwitchView: (view: AuthView) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
-  const navigate = useNavigate();
+const Login: React.FC<LoginProps> = ({ onLoginSuccess, onSwitchView }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -73,12 +75,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           {loading ? 'Вход...' : 'Войти'}
         </button>
         <div className="login-links">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/register'); }}>
+          <button type="button" onClick={() => onSwitchView('register')}>
             Зарегистрироваться
-          </a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate('/forgot-password'); }}>
+          </button>
+          <button type="button" onClick={() => onSwitchView('forgot-password')}>
             Забыли пароль?
-          </a>
+          </button>
         </div>
       </form>
     </div>

@@ -142,6 +142,9 @@ select {
 }
 
 .NoneOfShop {
-    color: black;
+    color: #1f2937;
 }
 
+.VisibleRoles {
+    color: #1f2937;
+}

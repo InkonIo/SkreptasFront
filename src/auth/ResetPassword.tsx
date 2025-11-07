@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import api from '../api';
 import './ResetPassword.css';
 
-const ResetPassword: React.FC = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const emailFromUrl = searchParams.get('email') || '';
+type AuthView = 'login' | 'register' | 'forgot-password' | 'reset-password' | null;
 
-  const [email, setEmail] = useState(emailFromUrl);
+interface ResetPasswordProps {
+  onSwitchView: (view: AuthView) => void;
+  initialEmail?: string;
+}
+
+const ResetPassword: React.FC<ResetPasswordProps> = ({ onSwitchView, initialEmail }) => {
+  const [email, setEmail] = useState(initialEmail || '');
   const [token, setToken] = useState(''); // Это будет 6-значный код
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -46,7 +49,7 @@ const ResetPassword: React.FC = () => {
 
       if (response.status === 200 || response.message === 'OK' || !response.error) {
         setSuccess('Пароль успешно сброшен! Вы будете перенаправлены на страницу входа.');
-        setTimeout(() => navigate('/login'), 3000);
+        setTimeout(() => onSwitchView('login'), 3000);
       } else {
         setError('Ошибка сброса пароля: ' + (response.message || JSON.stringify(response)));
       }
@@ -71,7 +74,7 @@ const ResetPassword: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="reset-password-input"
-            disabled={!!emailFromUrl}
+            disabled={!!initialEmail}
           />
         </div>
         <div className="form-group">
@@ -112,9 +115,9 @@ const ResetPassword: React.FC = () => {
         </button>
       </form>
       <div className="reset-password-links">
-        <a href="#" onClick={() => navigate('/login')}>
+        <button type="button" onClick={() => onSwitchView('login')}>
           Вернуться ко входу
-        </a>
+        </button>
       </div>
     </div>
   );

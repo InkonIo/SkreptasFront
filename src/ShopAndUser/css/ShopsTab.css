@@ -1,103 +1,316 @@
-/* ShopsTab.css */
-
 .shops-container {
-    padding: 20px;
+  width: 100%;
 }
 
 .shops-title {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  text-align: center;
 }
 
 .shops-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  width: 100%;
 }
 
 .shop-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border: 2px solid transparent;
 }
 
 .shop-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .shop-card.approved {
-    background-color: #f0fdf4; /* Light green for approved */
+  border-color: #4caf50;
 }
 
 .shop-card.pending {
-    background-color: #fffbeb; /* Light yellow for pending */
+  border-color: #ff9800;
 }
 
 .shop-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
+  padding: 1.5rem;
 }
 
 .shop-logo {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #eee;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  display: block;
+  border: 4px solid #f5f7fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .shop-details {
-    flex: 1;
+  text-align: center;
 }
 
 .shop-name {
-    font-size: 1.2rem;
-    margin: 0 0 8px 0;
-    color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
 }
 
 .shop-description {
-    margin: 5px 0;
-    color: #555;
-    font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .shop-meta {
-    margin: 5px 0;
-    color: #777;
-    font-size: 0.9rem;
+  color: #555;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .shop-status {
-    margin: 5px 0;
-    font-weight: 600;
-    font-size: 0.95rem;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 1rem 0;
 }
 
 .shop-status.approved {
-    color: #059669;
+  background: #e8f5e9;
+  color: #2e7d32;
 }
 
 .shop-status.pending {
-    color: #d97706;
+  background: #fff3e0;
+  color: #f57c00;
 }
 
 .shop-categories {
-    margin: 5px 0;
-    font-size: 0.85rem;
-    color: #4a4a4a;
+  color: #667eea;
+  margin: 0.75rem 0;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .shop-owner {
-    color: #888;
-    font-size: 0.8rem;
-    display: block;
-    margin-top: 5px;
+  display: block;
+  margin-top: 1rem;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .shops-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .shops-title {
+    font-size: 1.5rem;
+  }
+
+  .shop-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .shop-name {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shops-title {
+    font-size: 1.3rem;
+  }
+
+  .shop-logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .shop-name {
+    font-size: 1.1rem;
+  }
+}
+/* --- New Styles for Logo-Only View and Modal --- */
+
+.shop-card {
+  /* Убираем лишний паддинг и делаем карточку кликабельной */
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px; /* Фиксированная высота для лого-карточки */
+}
+
+.shop-card:hover {
+  transform: scale(1.05); /* Более заметный эффект при наведении */
+}
+
+.shop-content-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+}
+
+.shop-logo-only {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #f5f7fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.shop-logo-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #667eea;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.shop-modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.shop-modal-logo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  display: block;
+  border: 5px solid #f5f7fa;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.shop-modal-details {
+  text-align: center;
+}
+
+.shop-modal-description {
+  color: #555;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.shop-modal-meta {
+  color: #333;
+  margin: 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.shop-modal-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.shop-modal-link:hover {
+  text-decoration: underline;
+}
+
+.shop-modal-categories {
+  margin-top: 1rem;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.shop-modal-owner {
+  display: block;
+  margin-top: 1.5rem;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.shop-modal-status {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.shop-modal-status.approved {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.shop-modal-status.pending {
+  background: #fff3e0;
+  color: #f57c00;
 }

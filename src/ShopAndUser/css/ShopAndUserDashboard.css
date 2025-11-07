@@ -1,85 +1,268 @@
-/* ShopAndUserDashboard.css */
+/* Сброс стилей */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+/* Основной контейнер - на всю ширину */
 .dashboard-container {
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #f8f8f8;
-    min-height: 100vh;
+  width: 1320px;
+  min-height: 100vh;
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Header */
 .dashboard-header {
-    margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Изменено для размещения меню справа */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.menu-toggle-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #667eea;
+  transition: all 0.3s;
+}
+
+.menu-toggle-button:hover {
+  background: #f0f0f0;
+  border-radius: 8px;
 }
 
 .dashboard-title {
-    font-size: 2.5rem;
-    color: #1a1a1a;
-    margin: 0 auto;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Стили для нового модального меню --- */
+
+/* Фон-затемнение */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Анимация плавного появления */
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Само модальное окно */
+.modal-menu {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px; /* Мини-окно */
+  position: relative;
+  /* Анимация плавного появления */
+  transform: scale(0.9);
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); }
+  to { transform: scale(1); }
+}
+
+.close-menu-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #999;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: color 0.3s;
+}
+
+.close-menu-button:hover {
+  color: #333;
+}
+
+.user-panel, .auth-links {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .user-info {
-    font-size: 1rem;
-    color: #555;
-    margin-top: 5px;
+  padding: 1rem;
+  background: #f5f7fa;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.logout-button, .delete-account-button, .auth-link-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
 }
 
 .logout-button {
-    padding: 8px 16px;
-    cursor: pointer;
-    background-color: #f4f4f4;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
+  background: #667eea;
+  color: white;
 }
 
 .logout-button:hover {
-    background-color: #e0e0e0;
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-/* Navigation Tabs */
+.delete-account-button {
+  background: #ff4757;
+  color: white;
+}
+
+.delete-account-button:hover {
+  background: #ee5a6f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.auth-link-button {
+  background: #667eea;
+  color: white;
+  display: block;
+}
+
+.auth-link-button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Табы навигации */
 .tabs-container {
-    margin-bottom: 30px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: white;
+  border-bottom: 2px solid #e0e0e0;
+  overflow-x: auto;
+  flex-wrap: wrap;
 }
 
 .tab-button {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    background-color: #e5e7eb; /* Light gray default */
-    color: #333;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #f5f7fa;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  font-weight: 500;
 }
 
 .tab-button:hover {
-    background-color: #d1d5db;
+  background: #e8eaf0;
+  transform: translateY(-2px);
 }
 
 .tab-button.active-primary {
-    background-color: #3b82f6; /* Blue for primary tabs */
-    color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .tab-button.active-secondary {
-    background-color: #10b981; /* Green for my-shop tab */
-    color: white;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
 }
 
-/* Tab Content */
+/* Контент табов - широкий и адаптивный */
 .tab-content {
-    padding: 10px 0;
+  flex: 1;
+  padding: 2rem;
+  max-width: 1320px; /* Увеличено по запросу пользователя */
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 1rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.3rem;
+  }
+
+  .tabs-container {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .tab-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.1rem;
+  }
+
+  .tab-button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
 }

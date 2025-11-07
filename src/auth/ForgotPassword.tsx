@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import api from '../api';
 import './ForgotPassword.css';
 
-import { useNavigate } from 'react-router-dom';
 
-interface ForgotPasswordProps {}
 
-const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
-  const navigate = useNavigate();
+type AuthView = 'login' | 'register' | 'forgot-password' | 'reset-password' | null;
+
+interface ForgotPasswordProps {
+  onSwitchView: (view: AuthView, email?: string) => void;
+}
+
+const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onSwitchView }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -23,8 +26,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
       // Assuming the API returns a success message or status 200 on success
       if (response.status === 200 || response.message === 'OK' || !response.error) {
         setSuccess('Инструкции по сбросу пароля отправлены на вашу почту. Перенаправление...');
-        // Перенаправляем на страницу сброса пароля, передавая email
-        navigate(`/reset-password?email=${encodeURIComponent(email)}`);
+        // Переключаемся на модальное окно сброса пароля, передавая email
+        setTimeout(() => onSwitchView('reset-password', email), 2000);
       } else {
         setError('Ошибка: ' + (response.message || JSON.stringify(response)));
       }
@@ -57,9 +60,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
           Сбросить пароль
         </button>
         <div className="forgot-password-links">
-          <a href="#" onClick={() => navigate('/login')}>
+          <button type="button" onClick={() => onSwitchView('login')}>
             Вернуться ко входу
-          </a>
+          </button>
         </div>
       </form>
     </div>

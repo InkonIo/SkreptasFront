@@ -1,129 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './auth/Login';
-import Register from './auth/Register';
-import ForgotPassword from './auth/ForgotPassword';
-import ResetPassword from './auth/ResetPassword';
-import AdminDashboard from './admin/AdminDashboard';
 import ShopAndUserDashboard from './ShopAndUser/ShopAndUserDashboard';
+import AuthRoutes from './auth/AuthRoutes';
+import { api } from './ShopAndUser/ShopAndUserApi';
+import './ShopAndUser/css/ShopAndUserDashboard.css';
 
-function App() {
-  const storedToken = localStorage.getItem('token');
-  console.log('🔐 Initial token from localStorage:', storedToken ? 'exists' : 'null/empty');
-  
-  const [token, setToken] = useState<string>(storedToken || '');
-  const [user, setUser] = useState<any>(null);
-  const [isTokenChecked, setIsTokenChecked] = useState(false);
+// Интерфейс для пользователя
+interface User {
+  id: number;
+  email: string;
+  role: 'USER' | 'SHOP' | 'ADMIN';
+}
+
+const App: React.FC = () => {
+  const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'));
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadUser = async (authToken: string) => {
+    const storedUser = localStorage.getItem('authUser');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error('Ошибка парсинга данных пользователя:', e);
+        handleLogout();
+      }
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    console.log('🔍 Token check:', token ? 'Token exists' : 'No token');
     if (token) {
-      localStorage.setItem('token', token);
-      loadUserFromToken(token);
+      loadUser(token);
     } else {
-      setIsTokenChecked(true);
+      setLoading(false);
     }
   }, [token]);
 
-  const loadUserFromToken = (accessToken: string) => {
-    try {
-      const parts = accessToken.split('.');
-      if (parts.length !== 3) throw new Error('Invalid token format');
-      
-      const payload = JSON.parse(atob(parts[1]));
-      console.log('📦 Decoded JWT payload:', payload);
-      
-      // Убираем префикс ROLE_ если он есть
-      let role = payload.role || '';
-      if (role.startsWith('ROLE_')) {
-        role = role.substring(5);
-      }
-      
-      const userData = {
-        email: payload.sub,
-        role: role,
-      };
-      
-      console.log('👤 User data:', userData);
-      setUser(userData);
-    } catch (e) {
-      console.error('❌ Error decoding token:', e);
-      handleLogout();
-    } finally {
-      setIsTokenChecked(true);
-    }
-  };
-
-  const handleLoginSuccess = (accessToken: string, userData: any) => {
-    console.log('✅ Login success - Token:', accessToken);
-    console.log('✅ Login success - User:', userData);
-    
-    localStorage.setItem('token', accessToken);
-    setToken(accessToken);
-    setUser(userData);
-    
-    alert('Вход успешен!');
+  const handleLoginSuccess = (newToken: string, newUser: User) => {
+    localStorage.setItem('authToken', newToken);
+    localStorage.setItem('authUser', JSON.stringify(newUser));
+    setToken(newToken);
+    setUser(newUser);
   };
 
   const handleLogout = () => {
-    console.log('🚪 Logging out...');
-    setToken('');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('authUser');
+    setToken(null);
     setUser(null);
-    localStorage.removeItem('token');
+    window.location.href = '/'; 
   };
 
-  if (!isTokenChecked) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontFamily: 'Arial, sans-serif'
-      }}>
-        Загрузка...
-      </div>
-    );
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '50px' }}>Загрузка...</div>;
   }
-
-  console.log('🎯 Current user role:', user?.role);
 
   return (
     <Router>
       <Routes>
-        {/* Если не авторизован — показываем страницы авторизации */}
-        {!token || !user ? (
-          <>
-            <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </>
-        ) : (
-          <>
-            {/* Если ADMIN — редирект на панель администратора */}
-            {user.role === 'ADMIN' && (
-              <>
-                <Route path="/" element={<Navigate to="/panel-admin" replace />} />
-                <Route path="/panel-admin" element={<AdminDashboard token={token} user={user} onLogout={handleLogout} />} />
-                <Route path="*" element={<Navigate to="/panel-admin" replace />} />
-              </>
-            )}
-            
-            {/* Если обычный пользователь или SHOP */}
-            {user.role !== 'ADMIN' && (
-              <>
-                <Route path="/" element={<ShopAndUserDashboard token={token} user={user} onLogout={handleLogout} />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </>
-            )}
-          </>
-        )}
+        {/* Главная страница - "Лендинг" для всех */}
+        <Route 
+          path="/" 
+          element={
+              <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={true}
+            />
+          } 
+        />
+
+        {/* Маршруты аутентификации */}
+        <Route 
+          path="/*" 
+          element={
+            token ? (
+              <Navigate to="/" replace />
+            ) : (
+              <AuthRoutes onLoginSuccess={handleLoginSuccess} />
+            )
+          } 
+        />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

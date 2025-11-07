@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import api from '../api';
 import './Register.css';
 
-interface RegisterProps {}
+type AuthView = 'login' | 'register' | 'forgot-password' | 'reset-password' | null;
 
-const Register: React.FC<RegisterProps> = () => {
-  const navigate = useNavigate();
+interface RegisterProps {
+  onSwitchView: (view: AuthView) => void;
+}
+
+const Register: React.FC<RegisterProps> = ({ onSwitchView }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fio, setFio] = useState('');
@@ -41,7 +44,7 @@ const Register: React.FC<RegisterProps> = () => {
       // Check for success: either accessToken is present (full response) or success: true (empty response)
       if (response.accessToken || response.success) {
         setSuccess('Регистрация прошла успешно! Теперь вы можете войти.');
-        setTimeout(() => navigate('/login'), 2000); // Redirect to login after 2 seconds
+        setTimeout(() => onSwitchView('login'), 2000); // Switch to login view after 2 seconds
       } else {
         // This block should ideally not be reached if api.ts throws on error, but kept for safety
         const errorMessage = response.message || response.error || JSON.stringify(response);
@@ -115,9 +118,9 @@ const Register: React.FC<RegisterProps> = () => {
           Зарегистрироваться
         </button>
         <div className="register-links">
-          <a href="#" onClick={() => navigate('/login')}>
+          <button type="button" onClick={() => onSwitchView('login')}>
             Уже есть аккаунт? Войти
-          </a>
+          </button>
         </div>
       </form>
     </div>

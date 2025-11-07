@@ -86,7 +86,7 @@ const AdminUsers: React.FC<AdminUsersProps> = ({ token, onLogout }) => {
               <strong>{user.email}</strong> ({user.fio}) - Роль: {user.role}
             </div>
             <div>
-              <select 
+              <select className="VisibleRoles"
                 value={user.role}
                 onChange={(e) => handleUpdateRole(user.id, e.target.value as 'USER' | 'SHOP' | 'ADMIN')}
                 style={{ marginRight: '10px', padding: '5px' }}
