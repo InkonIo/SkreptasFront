@@ -38,6 +38,16 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({ favorites, onRemoveFavorite
                   <h3 className="favorite-title">{item.title}</h3>
                   <p className="favorite-description">{item.description}</p>
                   <p className="favorite-meta">🏪 Магазин: {item.shop?.name}</p>
+	                  {item.shop?.instagramLink && (
+	                    <a 
+	                      href={item.shop.instagramLink} 
+	                      target="_blank" 
+	                      rel="noopener noreferrer"
+	                      className="favorite-meta-link"
+	                    >
+	                      📷 Instagram
+	                    </a>
+	                  )}
                   <p className="favorite-meta">📍 {item.city}</p>
                   {hasTags(item) && (
                     <p className="favorite-tags">

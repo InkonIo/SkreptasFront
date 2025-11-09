@@ -35,6 +35,18 @@ export const adminApi = {
     });
   },
 
+  // ✅ НОВЫЙ МЕТОД: Загрузка иконки категории
+  uploadCategoryIcon: async (categoryId: number, formData: FormData, token: string) => {
+    return fetchWrapper(`${API_URL}/categories/${categoryId}/icon`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        // НЕ добавляем Content-Type для FormData - браузер сам установит с boundary
+      },
+      body: formData,
+    });
+  },
+
   // Shops
   createShop: async (formData: FormData, token: string) => {
     return fetchWrapper(`${API_URL}/shops`, {
@@ -54,6 +66,14 @@ export const adminApi = {
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(data),
+    });
+  },
+
+  getShopById: async (id: number, token: string) => {
+    return fetchWrapper(`${API_URL}/shops/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
   },
 

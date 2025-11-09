@@ -61,7 +61,7 @@ export const api = {
     formData.append('name', data.name);
     formData.append('description', data.description || '');
     formData.append('phone', data.phone);
-    formData.append('instagram', data.instagram || '');
+    formData.append('instagramLink', data.instagramLink || '');
     formData.append('city', data.city);
     formData.append('address', data.address || '');
     

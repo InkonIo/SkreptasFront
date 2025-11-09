@@ -46,6 +46,16 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ items, favorites, onToggleFavorite 
                 <h3 className="item-title">{item.title}</h3>
                 <p className="item-description">{item.description}</p>
                 <p className="item-meta">🏪 Магазин: {item.shop?.name}</p>
+	            {item.shop?.instagramLink && (
+	              <a 
+	                href={item.shop.instagramLink} 
+	                target="_blank" 
+	                rel="noopener noreferrer"
+	                className="item-meta-link"
+	              >
+	                📷 Instagram
+	              </a>
+	            )}
                 <p className="item-meta">📍 {item.city}</p>
                 {hasTags(item) && (
                   <p className="item-tags">

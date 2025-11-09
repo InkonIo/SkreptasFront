@@ -40,8 +40,22 @@ const ShopsTab: React.FC<ShopsTabProps> = ({ shops }) => {
                     {shop.name.substring(0, 2)}
                   </div>
                 )}
-              </div>
-            </div>
+	              </div>
+	              <div className="shop-card-details">
+	                <h4 className="shop-card-name">{shop.name}</h4>
+	                {shop.instagramLink && (
+	                  <a 
+	                    href={shop.instagramLink} 
+	                    target="_blank" 
+	                    rel="noopener noreferrer"
+	                    className="shop-card-instagram-link"
+	                    onClick={(e) => e.stopPropagation()} // Prevent opening modal when clicking link
+	                  >
+	                    📷 Перейти в Instagram
+	                  </a>
+	                )}
+	              </div>
+	            </div>
           ))}
         </div>
       </div>
@@ -65,9 +79,9 @@ const ShopsTab: React.FC<ShopsTabProps> = ({ shops }) => {
               <p className="shop-modal-description">{selectedShop.description}</p>
               <p className="shop-modal-meta">📍 {selectedShop.city}, {selectedShop.address}</p>
               <p className="shop-modal-meta">📞 {selectedShop.phone}</p>
-              {selectedShop.instagram && (
+              {selectedShop.instagramLink && (
                 <a 
-                  href={selectedShop.instagram} 
+                  href={selectedShop.instagramLink} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="shop-modal-link"

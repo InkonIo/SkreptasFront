@@ -101,6 +101,25 @@ export const authApi = {
     return fetchWrapper(`${API_URL}/shops/${id}`);
   },
 
+  // ✅ НОВЫЙ МЕТОД: Получить свой магазин
+  getMyShop: async (token: string) => {
+    return fetchWrapper(`${API_URL}/shops/my-shop`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+  },
+
+  // ✅ НОВЫЙ МЕТОД: Удалить свой магазин
+  deleteOwnShop: async (token: string) => {
+    return fetchWrapper(`${API_URL}/shops/my-shop`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+  },
+
   // Items
   getItems: async () => {
     return fetchWrapper(`${API_URL}/items`);

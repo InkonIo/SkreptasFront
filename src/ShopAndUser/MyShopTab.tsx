@@ -44,11 +44,10 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
 
   const [isCompressing, setIsCompressing] = useState(false);
 
-  // Функция сжатия изображения
   const compressImage = async (file: File): Promise<File> => {
     const options = {
-      maxSizeMB: 1, // Максимальный размер 1MB
-      maxWidthOrHeight: 1920, // Максимальное разрешение
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
       useWebWorker: true,
       fileType: file.type,
     };
@@ -63,19 +62,16 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
     }
   };
 
-  // Обработчик выбора логотипа магазина
   const handleLogoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Проверка типа файла
     if (!file.type.startsWith('image/')) {
       alert('Пожалуйста, выберите изображение');
       return;
     }
 
-    // Проверка размера (максимум 10MB перед сжатием)
-    const maxSizeBeforeCompression = 10 * 1024 * 1024; // 10MB
+    const maxSizeBeforeCompression = 10 * 1024 * 1024;
     if (file.size > maxSizeBeforeCompression) {
       alert('Файл слишком большой. Максимальный размер: 10MB');
       return;
@@ -92,20 +88,17 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
     }
   };
 
-  // Обработчик выбора изображений товара
   const handleImageFilesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
 
     const files = Array.from(e.target.files);
 
-    // Проверка типов файлов
     const invalidFiles = files.filter(file => !file.type.startsWith('image/'));
     if (invalidFiles.length > 0) {
       alert('Все файлы должны быть изображениями');
       return;
     }
 
-    // Проверка количества файлов
     if (files.length > 10) {
       alert('Максимум 10 изображений');
       return;
@@ -114,7 +107,6 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
     try {
       setIsCompressing(true);
       
-      // Сжимаем все изображения параллельно
       const compressedFiles = await Promise.all(
         files.map(file => compressImage(file))
       );
@@ -196,6 +188,24 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
       onItemCreated();
     } catch (error) {
       alert('Ошибка создания товара: ' + error);
+    }
+  };
+
+  // ✅ НОВАЯ ФУНКЦИЯ: Удаление магазина
+  const handleDeleteShop = async () => {
+    if (!myShop) return;
+    
+    if (!window.confirm(`Вы уверены, что хотите удалить магазин "${myShop.name}"? Это действие необратимо и удалит все товары магазина.`)) {
+      return;
+    }
+
+    try {
+      await api.deleteShop(myShop.id, token);
+      alert('Магазин успешно удален.');
+      onShopCreated(); // Обновляем список магазинов
+    } catch (error: any) {
+      console.error('Ошибка удаления магазина:', error);
+      alert('Ошибка при удалении магазина: ' + (error.message || 'Неизвестная ошибка'));
     }
   };
 
@@ -337,6 +347,23 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
                 <p className={`shop-status ${myShop.approved ? 'approved' : 'pending'}`}>
                   {myShop.approved ? '✅ Одобрен' : '⏳ На модерации'}
                 </p>
+                {/* ✅ НОВАЯ КНОПКА УДАЛЕНИЯ */}
+                <button 
+                  onClick={handleDeleteShop} 
+                  className="delete-shop-btn"
+                  style={{
+                    marginTop: '15px',
+                    padding: '10px 20px',
+                    backgroundColor: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  🗑️ Удалить магазин
+                </button>
               </div>
             </div>
           </div>

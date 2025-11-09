@@ -148,3 +148,7 @@ select {
 .VisibleRoles {
     color: #1f2937;
 }
+
+.modal-overlay {
+    color: black
+}

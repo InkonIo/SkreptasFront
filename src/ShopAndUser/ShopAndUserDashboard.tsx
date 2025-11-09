@@ -11,7 +11,6 @@ import AdminAllShops from '../admin/AdminAllShops';
 import AdminItems from '../admin/AdminItems';
 import AdminCategories from '../admin/AdminCategories';
 
-// Импорт компонентов аутентификации для модального окна
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import ForgotPassword from '../auth/ForgotPassword';
@@ -23,7 +22,6 @@ interface ShopAndUserDashboardProps {
   onLogout: () => void;
   onLoginSuccess: (token: string, user: any) => void;
   isLanding: boolean;
-  // onNavigate?: (path: string) => void; // Удалено, так как навигация будет модальной
 }
 
 const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user, onLogout, isLanding, onLoginSuccess }) => {
@@ -41,7 +39,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
 
   const handleOpenAuthModal = (view: AuthView) => {
     setIsMenuOpen(false);
-    setResetPasswordEmail(undefined); // Сброс email при открытии
+    setResetPasswordEmail(undefined);
     setActiveAuthView(view);
   };
 
@@ -51,16 +49,10 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
   };
 
   const handleAuthSuccess = (token: string, user: any) => {
-    // Предполагаем, что onLoginSuccess будет вызван извне, но для модала нужно закрыть его
     handleCloseAuthModal();
-    // onLoginSuccess(token, user); // Эта логика должна быть в родительском компоненте, который передает onLoginSuccess
-    // Но так как onLoginSuccess не передается в ShopAndUserDashboard, просто закрываем модал.
-    // Если onLoginSuccess нужен, его нужно добавить в ShopAndUserDashboardProps
-    // Для простоты, полагаемся на то, что родительский компонент обновит состояние token/user
   };
 
   useEffect(() => {
-    // Если это лендинг и нет токена, не загружаем избранное и мой магазин
     if (isLanding && !token) {
       loadCategories();
       loadShops();
@@ -72,10 +64,11 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     loadShops();
     loadItems();
     loadFavorites();
-    if (user?.role === 'SHOP' && token) {
+    // ✅ ИСПРАВЛЕНО: Загружаем магазин для всех авторизованных пользователей
+    if (token) {
       loadMyShop();
     }
-  }, [user]);
+  }, [user, token]);
 
   const loadCategories = async () => {
     try {
@@ -172,16 +165,13 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
       <div className="dashboard-header">
         <h1 className="dashboard-title">Skrepta App</h1>
-        {/* Бургер-меню, перемещенное вправо */}
         <button className="menu-toggle-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           ☰
         </button>
       </div>
 
-      {/* Модальное меню (мини-окно) */}
       {isMenuOpen && (
         <div className="modal-overlay" onClick={() => setIsMenuOpen(false)}>
           <div className="modal-menu" onClick={(e) => e.stopPropagation()}>
@@ -210,7 +200,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
         </div>
       )}
 
-      {/* Модальное окно аутентификации */}
       {activeAuthView && (
         <div className="modal-overlay" onClick={handleCloseAuthModal}>
           <div className="modal-menu auth-modal" onClick={(e) => e.stopPropagation()}>
@@ -248,7 +237,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
         </div>
       )}
 
-      {/* Navigation Tabs */}
       <div className="tabs-container">
         <button 
           onClick={() => setActiveTab('shops')} 
@@ -263,20 +251,21 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           📦 Товары
         </button>
         {token && (
-          <button 
-            onClick={() => setActiveTab('favorites')} 
-            className={`tab-button ${activeTab === 'favorites' ? 'active-primary' : ''}`}
-          >
-            ❤️ Избранное {favorites.length > 0 && `(${favorites.length})`}
-          </button>
-        )}
-        {token && user?.role === 'SHOP' && (
-          <button 
-            onClick={() => setActiveTab('my-shop')} 
-            className={`tab-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
-          >
-            🏪 Мой магазин
-          </button>
+          <>
+            <button 
+              onClick={() => setActiveTab('favorites')} 
+              className={`tab-button ${activeTab === 'favorites' ? 'active-primary' : ''}`}
+            >
+              ❤️ Избранное {favorites.length > 0 && `(${favorites.length})`}
+            </button>
+            {/* ✅ ИСПРАВЛЕНО: Вкладка доступна всем авторизованным пользователям */}
+            <button 
+              onClick={() => setActiveTab('my-shop')} 
+              className={`tab-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
+            >
+              🏪 Мой магазин
+            </button>
+          </>
         )}
         {token && user?.role === 'ADMIN' && (
           <>
@@ -314,7 +303,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
         )}
       </div>
 
-      {/* Tab Content */}
       <div className="tab-content">
         {activeTab === 'shops' && <ShopsTab shops={shops} />}
         
@@ -333,7 +321,8 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           />
         )}
         
-        {activeTab === 'my-shop' && token && user?.role === 'SHOP' && (
+        {/* ✅ ИСПРАВЛЕНО: Убрано условие user?.role === 'SHOP' */}
+        {activeTab === 'my-shop' && token && (
           <MyShopTab 
             myShop={myShop}
             categories={categories}
@@ -344,7 +333,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           />
         )}
 
-        {/* Admin Tabs */}
         {activeTab === 'admin-users' && token && user?.role === 'ADMIN' && (
           <AdminUsers token={token} onLogout={onLogout} />
         )}
