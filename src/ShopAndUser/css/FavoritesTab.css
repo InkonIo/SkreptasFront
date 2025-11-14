@@ -1,108 +1,45 @@
-/* FavoritesTab.css */
+@import url('../../light_theme_vars.css');
 
-.favorites-container {
-    padding: 20px;
-}
-
-.favorites-title {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-}
-
+/* ===== FAVORITES TAB ===== */
 .favorites-empty {
-    color: #888;
-    text-align: center;
-    padding: 40px;
-    font-size: 1.1rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #eee;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 50px;
+  font-size: 1.3rem;
+  background: var(--background-light);
+  border-radius: 20px;
+  border: 2px dashed rgba(223, 23, 120, 0.5);
+  font-family: 'Abingdon', cursive;
+  font-style: italic;
 }
 
-.favorites-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
+/* Адаптивность */
+@media (max-width: 768px) {
+  .items-grid, .favorites-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 
-.favorite-item {
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
-}
+  .items-title, .favorites-title {
+    font-size: 2rem;
+  }
 
-.favorite-item:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.favorite-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 15px;
-}
-
-.favorite-info {
-    flex: 1;
-}
-
-.favorite-images {
-    margin-bottom: 10px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.favorite-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid #eee;
-}
-
-.favorite-title {
+  .item-title, .favorite-title {
     font-size: 1.2rem;
-    margin: 0 0 8px 0;
-    color: #1a1a1a;
+  }
 }
 
-.favorite-description {
-    margin: 5px 0;
-    color: #555;
-    font-size: 0.95rem;
-}
+@media (max-width: 480px) {
+  .items-title, .favorites-title {
+    font-size: 1.7rem;
+  }
 
-.favorite-meta {
-    margin: 5px 0;
-    color: #777;
-    font-size: 0.9rem;
-}
+  .item-title, .favorite-title {
+    font-size: 1.1rem;
+  }
 
-.favorite-tags {
-    margin: 5px 0;
-    font-size: 0.9rem;
-    color: #4a4a4a;
-}
-
-.favorite-remove-btn {
-    padding: 8px 16px;
-    cursor: pointer;
-    background-color: #ef4444; /* Red for removal */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    white-space: nowrap;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
-}
-
-.favorite-remove-btn:hover {
-    background-color: #dc2626;
+  .item-image, .favorite-image, .item-image-more {
+    width: 70px;
+    height: 70px;
+  }
 }

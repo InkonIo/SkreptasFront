@@ -109,6 +109,12 @@ export const api = {
   },
 
   // Items
+  getShopItems: async (shopId: number) => {
+    const response = await fetch(`${BASE_URL}/api/shops/${shopId}/items`);
+    if (!response.ok) throw new Error('Failed to fetch shop items');
+    return response.json();
+  },
+
   getItems: async () => {
     const response = await fetch(`${BASE_URL}/api/items`);
     if (!response.ok) throw new Error('Failed to fetch items');
@@ -173,7 +179,7 @@ export const api = {
     return response.text();
   },
 
-  // Favorites
+  // Favorites (Items)
   getFavorites: async (token: string) => {
     const response = await fetch(`${BASE_URL}/api/favorites`, {
       headers: { 'Authorization': `Bearer ${token}` },
@@ -198,6 +204,46 @@ export const api = {
     });
     if (!response.ok) throw new Error('Failed to remove from favorites');
     return response.text();
+  },
+
+  // Shop Favorites
+  getShopFavorites: async (token: string) => {
+    const response = await fetch(`${BASE_URL}/api/shop-favorites`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!response.ok) throw new Error('Failed to fetch favorite shops');
+    return response.json();
+  },
+
+  addShopToFavorites: async (shopId: number, token: string) => {
+    const response = await fetch(`${BASE_URL}/api/shop-favorites/${shopId}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!response.ok) throw new Error('Failed to add shop to favorites');
+    return response.text();
+  },
+
+  removeShopFromFavorites: async (shopId: number, token: string) => {
+    const response = await fetch(`${BASE_URL}/api/shop-favorites/${shopId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!response.ok) throw new Error('Failed to remove shop from favorites');
+    return response.text();
+  },
+
+  isShopInFavorites: async (shopId: number, token: string) => {
+    const response = await fetch(`${BASE_URL}/api/shop-favorites/${shopId}/check`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!response.ok) {
+      // The check endpoint returns a boolean, so we check for 404/401 etc.
+      // If the response is not OK, we assume an error occurred, not that the shop is not a favorite.
+      throw new Error('Failed to check shop favorite status');
+    }
+    // The API returns a boolean value (true/false) in the response body.
+    return response.json();
   },
 
   // Auth
