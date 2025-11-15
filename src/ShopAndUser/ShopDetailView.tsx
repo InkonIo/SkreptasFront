@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { api } from './ShopAndUserApi';
-import ItemsTab from './ItemsTab';
-import '../ShopAndUser/css/ShopsTab.css';
+import ItemsTab from './ItemAbout/ItemsTab';
+import '../ShopAndUser/css/ShopDetailView.css';
 
 interface ShopDetailViewProps {
   shop: any;
   onClose: () => void;
   currentUserId: number | null;
-  // token: string | null; // УДАЛЕНО
 }
 
 const ShopDetailView: React.FC<ShopDetailViewProps> = ({ 
@@ -35,11 +34,12 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Состояния для избранного
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
 
-  // Загрузка товаров магазина
+  const [favoriteItems, setFavoriteItems] = useState<any[]>([]);
+  const [loadingFavoriteItems, setLoadingFavoriteItems] = useState(false);
+
   useEffect(() => {
     const fetchShopItems = async () => {
       if (!shop || !shop.id) return;
@@ -60,10 +60,9 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
     fetchShopItems();
   }, [shop]);
 
-  // Проверка статуса избранного при загрузке
   useEffect(() => {
     const checkFavoriteStatus = async () => {
-            const token = localStorage.getItem('accessToken');
+      const token = localStorage.getItem('accessToken');
       if (!token || !shop?.id) return;
       
       try {
@@ -75,9 +74,31 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
     };
     
     checkFavoriteStatus();
-  }, [shop]); // Убрали зависимость от token
+  }, [shop]);
 
-  // Обработчик переключения избранного
+  useEffect(() => {
+    const loadFavoriteItems = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        setFavoriteItems([]);
+        return;
+      }
+
+      setLoadingFavoriteItems(true);
+      try {
+        const favorites = await api.getFavorites(token);
+        setFavoriteItems(favorites);
+      } catch (err) {
+        console.error('Failed to load favorite items:', err);
+        setFavoriteItems([]);
+      } finally {
+        setLoadingFavoriteItems(false);
+      }
+    };
+
+    loadFavoriteItems();
+  }, []);
+
   const handleToggleFavorite = async () => {
     const token = localStorage.getItem('accessToken');
     if (!token || !shop?.id) {
@@ -99,6 +120,32 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
       alert('Не удалось обновить избранное');
     } finally {
       setFavoriteLoading(false);
+    }
+  };
+
+  const handleToggleFavoriteItem = async (itemId: number, isFavorite: boolean) => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('Войдите, чтобы добавить в избранное');
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await api.removeFromFavorites(itemId, token);
+        setFavoriteItems(prev => prev.filter(item => item.id !== itemId));
+        alert('Удалено из избранного');
+      } else {
+        await api.addToFavorites(itemId, token);
+        const item = items.find(i => i.id === itemId);
+        if (item) {
+          setFavoriteItems(prev => [...prev, item]);
+        }
+        alert('Добавлено в избранное');
+      }
+    } catch (err) {
+      console.error('Failed to toggle favorite item:', err);
+      alert('Ошибка при обновлении избранного');
     }
   };
 
@@ -130,7 +177,6 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
           </a>
         )}
         
-        {/* Кнопка избранного */}
         <button 
           className="shop-detail-favorite-button"
           onClick={handleToggleFavorite}
@@ -140,7 +186,6 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
           {isFavorite ? 'Убрать из избранного' : 'Добавить в избранные'}
         </button>
 
-        {/* Сообщение владельцу */}
         {currentUserId && shop.owner?.id === currentUserId && (
           <div className="shop-owner-actions">
             <p className="shop-owner-message">
@@ -181,17 +226,15 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
       return <div className="items-empty">Товары не найдены.</div>;
     }
 
-    const mockFavorites: any[] = [];
-    const mockToggleFavorite = (itemId: number, isFavorite: boolean) => {
-      console.log(`Toggle favorite for item ${itemId}. Current state: ${isFavorite}`);
-    };
-
     return (
-      <ItemsTab 
-        items={items} 
-        favorites={mockFavorites} 
-        onToggleFavorite={mockToggleFavorite} 
-      />
+      <>
+        <h2 className="items-section-title">Все товары</h2>
+        <ItemsTab 
+          items={items} 
+          favorites={favoriteItems}
+          onToggleFavorite={handleToggleFavoriteItem} 
+        />
+      </>
     );
   };
 

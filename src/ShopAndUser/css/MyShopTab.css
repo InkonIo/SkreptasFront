@@ -1,4 +1,4 @@
-@import url('../../light_theme_vars.css');
+
 
 /* MyShopTab.css - Skrepta Style */
 
@@ -210,6 +210,8 @@
   box-shadow: 0 8px 30px var(--shadow-color);
   position: relative;
   overflow: hidden;
+  /* Увеличиваем внутренний отступ, чтобы контент не прилипал к краям */
+  padding: 40px; 
 }
 
 .shop-info-card::before {
@@ -242,12 +244,20 @@
 }
 
 .shop-logo {
-  width: 130px;
-  height: 130px;
+  /* Фиксированные размеры */
+  width: 180px !important;
+  height: 180px !important;
+  min-width: 180px;
+  max-width: 180px;
+  min-height: 180px;
+  max-height: 180px;
+  flex-shrink: 0;
+  flex-grow: 0;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 20px;
   border: 3px solid #df1778;
   box-shadow: 0 0 25px rgba(223, 23, 120, 0.5);
+  display: block;
 }
 
 .shop-details {

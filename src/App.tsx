@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ShopAndUserDashboard from './ShopAndUser/ShopAndUserDashboard';
+import CategoryPage from './ShopAndUser/CategoryPage/CategoryPage';
+import PrivacyPolicy from './footer/privacy'; // Предполагаем, что файл находится в корне
+import TermsOfUse from './footer/terms'; // Предполагаем, что файл находится в корне
 import AuthRoutes from './auth/AuthRoutes';
 import { api } from './ShopAndUser/ShopAndUserApi';
 import './ShopAndUser/css/ShopAndUserDashboard.css';
@@ -13,7 +16,8 @@ interface User {
 }
 
 const App: React.FC = () => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'));
+  // ИСПРАВЛЕНО: Используем accessToken вместо authToken
+  const [token, setToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -39,14 +43,17 @@ const App: React.FC = () => {
   }, [token]);
 
   const handleLoginSuccess = (newToken: string, newUser: User) => {
-    localStorage.setItem('authToken', newToken);
+    // ИСПРАВЛЕНО: Сохраняем как accessToken
+    localStorage.setItem('accessToken', newToken);
     localStorage.setItem('authUser', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
+    console.log('Токен сохранен как accessToken:', newToken);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    // ИСПРАВЛЕНО: Удаляем accessToken
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('authUser');
     setToken(null);
     setUser(null);
@@ -60,11 +67,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Главная страница - "Лендинг" для всех */}
+        {/* Все маршруты ведут на ShopAndUserDashboard, который управляет контентом */}
         <Route 
           path="/" 
           element={
-              <ShopAndUserDashboard 
+            <ShopAndUserDashboard 
               token={token} 
               user={user} 
               onLogout={handleLogout} 
@@ -73,10 +80,111 @@ const App: React.FC = () => {
             />
           } 
         />
+        
+        <Route 
+          path="/favorites" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+        
+        <Route 
+          path="/my-shop" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+        
+        <Route 
+          path="/admin-users" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+        
+        <Route 
+          path="/admin-shops" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+        
+        <Route 
+          path="/admin-all-shops" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+        
+        <Route 
+          path="/admin-items" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+        
+        <Route 
+          path="/admin-categories" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+
+        {/* Страница категории */}
+        <Route 
+          path="/category/:categorySlug" 
+          element={<CategoryPage />} 
+        />
+
+        {/* Маршруты для Политики конфиденциальности и Условий пользования */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-use" element={<TermsOfUse />} />
 
         {/* Маршруты аутентификации */}
         <Route 
-          path="/*" 
+          path="/auth/*" 
           element={
             token ? (
               <Navigate to="/" replace />

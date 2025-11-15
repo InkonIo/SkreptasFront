@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../ShopAndUser/css/ShopAndUserDashboard.css';
 import { api } from './ShopAndUserApi';
 import ShopsTab from './ShopsTab';
-import ItemsTab from './ItemsTab';
+import ItemsTab from './ItemAbout/ItemsTab';
 import FavoritesTab from './FavoritesTab';
 import MyShopTab from './MyShopTab';
 import AdminUsers from '../admin/AdminUsers';
@@ -10,6 +11,8 @@ import AdminShops from '../admin/AdminShops';
 import AdminAllShops from '../admin/AdminAllShops';
 import AdminItems from '../admin/AdminItems';
 import AdminCategories from '../admin/AdminCategories';
+import MainPanel from './MainPanel/MainPanel';
+import Footer from '../footer/footer'; // Импортируем компонент Footer
 
 import Login from '../auth/Login';
 import Register from '../auth/Register';
@@ -25,7 +28,24 @@ interface ShopAndUserDashboardProps {
 }
 
 const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user, onLogout, isLanding, onLoginSuccess }) => {
-  const [activeTab, setActiveTab] = useState<'shops' | 'items' | 'favorites' | 'my-shop' | 'admin-users' | 'admin-shops' | 'admin-all-shops' | 'admin-items' | 'admin-categories'>(isLanding ? 'shops' : 'shops');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Определяем активную вкладку на основе текущего пути
+  const getActiveTabFromPath = () => {
+    const path = location.pathname;
+    if (path === '/') return 'home';
+    if (path === '/favorites') return 'favorites';
+    if (path === '/my-shop') return 'my-shop';
+    if (path === '/admin-users') return 'admin-users';
+    if (path === '/admin-shops') return 'admin-shops';
+    if (path === '/admin-all-shops') return 'admin-all-shops';
+    if (path === '/admin-items') return 'admin-items';
+    if (path === '/admin-categories') return 'admin-categories';
+    return 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState<'home' | 'favorites' | 'my-shop' | 'admin-users' | 'admin-shops' | 'admin-all-shops' | 'admin-items' | 'admin-categories'>(getActiveTabFromPath());
   const [categories, setCategories] = useState<any[]>([]);
   const [shops, setShops] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
@@ -36,6 +56,11 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
   type AuthView = 'login' | 'register' | 'forgot-password' | 'reset-password' | null;
   const [activeAuthView, setActiveAuthView] = useState<AuthView>(null);
   const [resetPasswordEmail, setResetPasswordEmail] = useState<string | undefined>(undefined);
+
+  // Синхронизация activeTab с URL
+  useEffect(() => {
+    setActiveTab(getActiveTabFromPath());
+  }, [location.pathname]);
 
   const handleOpenAuthModal = (view: AuthView) => {
     setIsMenuOpen(false);
@@ -54,17 +79,16 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
 
   useEffect(() => {
     if (isLanding && !token) {
-      loadCategories();
-      loadShops();
-      loadItems();
-      return;
-    }
+	    loadCategories();
+	    loadShops();
+	    loadItems();
+	    return;
+	  }
 
-    loadCategories();
-    loadShops();
-    loadItems();
-    loadFavorites();
-    // ✅ ИСПРАВЛЕНО: Загружаем магазин для всех авторизованных пользователей
+	  loadCategories();
+	  loadShops();
+	  loadItems();
+	  loadFavorites();
     if (token) {
       loadMyShop();
     }
@@ -165,13 +189,33 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
 
   return (
     <div className="dashboard-container">
+      {/* Шапка - всегда видна */}
       <div className="dashboard-header">
-        <h1 className="dashboard-title">Skrepta App</h1>
+        <h1 className="dashboard-title" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Skrepta App</h1>
+        <div className="header-links">
+          {token && (
+            <>
+              <button 
+                onClick={() => navigate('/favorites')} 
+                className={`header-link-button ${activeTab === 'favorites' ? 'active-primary' : ''}`}
+              >
+                ❤️ Избранное {favorites.length > 0 && `(${favorites.length})`}
+              </button>
+              <button 
+                onClick={() => navigate('/my-shop')} 
+                className={`header-link-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
+              >
+                🏪 Мой магазин
+              </button>
+            </>
+          )}
+        </div>
         <button className="menu-toggle-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           ☰
         </button>
       </div>
 
+      {/* Меню бургер */}
       {isMenuOpen && (
         <div className="modal-overlay" onClick={() => setIsMenuOpen(false)}>
           <div className="modal-menu" onClick={(e) => e.stopPropagation()}>
@@ -200,6 +244,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
         </div>
       )}
 
+      {/* Модальные окна авторизации */}
       {activeAuthView && (
         <div className="modal-overlay" onClick={handleCloseAuthModal}>
           <div className="modal-menu auth-modal" onClick={(e) => e.stopPropagation()}>
@@ -237,82 +282,46 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
         </div>
       )}
 
-      <div className="tabs-container">
-        <button 
-          onClick={() => setActiveTab('shops')} 
-          className={`tab-button ${activeTab === 'shops' ? 'active-primary' : ''}`}
-        >
-          🏪 Магазины
-        </button>
-        <button 
-          onClick={() => setActiveTab('items')} 
-          className={`tab-button ${activeTab === 'items' ? 'active-primary' : ''}`}
-        >
-          📦 Товары
-        </button>
-        {token && (
-          <>
-            <button 
-              onClick={() => setActiveTab('favorites')} 
-              className={`tab-button ${activeTab === 'favorites' ? 'active-primary' : ''}`}
-            >
-              ❤️ Избранное {favorites.length > 0 && `(${favorites.length})`}
-            </button>
-            {/* ✅ ИСПРАВЛЕНО: Вкладка доступна всем авторизованным пользователям */}
-            <button 
-              onClick={() => setActiveTab('my-shop')} 
-              className={`tab-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
-            >
-              🏪 Мой магазин
-            </button>
-          </>
-        )}
-        {token && user?.role === 'ADMIN' && (
-          <>
-            <button 
-              onClick={() => setActiveTab('admin-users')} 
-              className={`tab-button ${activeTab === 'admin-users' ? 'active-admin' : ''}`}
-            >
-              🧑‍💻 Пользователи
-            </button>
-            <button 
-              onClick={() => setActiveTab('admin-shops')} 
-              className={`tab-button ${activeTab === 'admin-shops' ? 'active-admin' : ''}`}
-            >
-              ⏳ Магазины (Модерация)
-            </button>
-            <button 
-              onClick={() => setActiveTab('admin-all-shops')} 
-              className={`tab-button ${activeTab === 'admin-all-shops' ? 'active-admin' : ''}`}
-            >
-              🏪 Все Магазины
-            </button>
-            <button 
-              onClick={() => setActiveTab('admin-items')} 
-              className={`tab-button ${activeTab === 'admin-items' ? 'active-admin' : ''}`}
-            >
-              📦 Все Товары
-            </button>
-            <button 
-              onClick={() => setActiveTab('admin-categories')} 
-              className={`tab-button ${activeTab === 'admin-categories' ? 'active-admin' : ''}`}
-            >
-              🏷️ Категории
-            </button>
-          </>
-        )}
-      </div>
+      {/* Админские табы - только для админов */}
+      {token && user?.role === 'ADMIN' && (
+        <div className="tabs-container">
+          <button 
+            onClick={() => navigate('/admin-users')} 
+            className={`tab-button ${activeTab === 'admin-users' ? 'active-admin' : ''}`}
+          >
+            🧑‍💻 Пользователи
+          </button>
+          <button 
+            onClick={() => navigate('/admin-shops')} 
+            className={`tab-button ${activeTab === 'admin-shops' ? 'active-admin' : ''}`}
+          >
+            ⏳ Магазины (Модерация)
+          </button>
+          <button 
+            onClick={() => navigate('/admin-all-shops')} 
+            className={`tab-button ${activeTab === 'admin-all-shops' ? 'active-admin' : ''}`}
+          >
+            🏪 Все Магазины
+          </button>
+          <button 
+            onClick={() => navigate('/admin-items')} 
+            className={`tab-button ${activeTab === 'admin-items' ? 'active-admin' : ''}`}
+          >
+            📦 Все Товары
+          </button>
+          <button 
+            onClick={() => navigate('/admin-categories')} 
+            className={`tab-button ${activeTab === 'admin-categories' ? 'active-admin' : ''}`}
+          >
+            🏷️ Категории
+          </button>
+        </div>
+      )}
 
+      {/* Контент - меняется в зависимости от activeTab */}
       <div className="tab-content">
-        {activeTab === 'shops' && <ShopsTab shops={shops} />}
-        
-        {activeTab === 'items' && (
-          <ItemsTab 
-            items={items} 
-            favorites={favorites} 
-            onToggleFavorite={handleToggleFavorite} 
-          />
-        )}
+        {/* Главная страница - каталог магазинов */}
+        {activeTab === 'home' && <MainPanel />}
         
         {activeTab === 'favorites' && token && (
           <FavoritesTab 
@@ -321,7 +330,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           />
         )}
         
-        {/* ✅ ИСПРАВЛЕНО: Убрано условие user?.role === 'SHOP' */}
         {activeTab === 'my-shop' && token && (
           <MyShopTab 
             myShop={myShop}
@@ -349,6 +357,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           <AdminCategories token={token} onLogout={onLogout} />
         )}
       </div>
+      <Footer /> {/* Добавляем футер в самый конец */}
     </div>
   );
 };

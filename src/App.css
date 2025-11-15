@@ -1,58 +1,8 @@
+/* Оставляем только необходимые стили */
+
 #root {
   width: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Styles for delete account button in ShopAndUserDashboard.tsx */
-.delete-account-button {
-    background-color: #dc3545; /* Red color for danger action */
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    margin-left: 10px; /* Add some space from the logout button */
-    transition: background-color 0.2s ease;
-}
-
-.delete-account-button:hover {
-    background-color: #c82333;
 }

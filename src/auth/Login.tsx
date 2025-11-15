@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import api from '../api';
 import './Login.css';
 
@@ -29,8 +28,13 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onSwitchView }) => {
       console.log('Ответ от API:', response);
 
       if (response.accessToken && response.user) {
-        console.log('Вход успешен, вызываем onLoginSuccess');
+        console.log('Вход успешен, токен:', response.accessToken);
+        console.log('Пользователь:', response.user);
+        
+        // Вызываем callback с токеном и пользователем
         onLoginSuccess(response.accessToken, response.user);
+        
+        console.log('✅ onLoginSuccess вызван успешно');
       } else {
         setError('Некорректный ответ от сервера');
         console.error('Некорректный ответ:', response);

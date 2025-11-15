@@ -1,60 +1,66 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../ShopAndUser/css/ShopsTab.css';
 import ShopDetailView from './ShopDetailView';
-
 import { api } from './ShopAndUserApi';
 
 interface ShopsTabProps {
   shops: any[];
   currentUserId: number | null;
-  // token: string | null; // УДАЛЕНО
+  categories: any[];
 }
 
-const ShopsTab: React.FC<ShopsTabProps> = ({ shops, currentUserId }) => { // УДАЛЕНО: token
+const ShopsTab: React.FC<ShopsTabProps> = ({ shops, currentUserId, categories }) => {
   const [selectedShop, setSelectedShop] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'all' | 'favorites'>('all');
   const [favoriteShops, setFavoriteShops] = useState<any[]>([]);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
   const [errorFavorites, setErrorFavorites] = useState<string | null>(null);
-  const [currentAccessToken, setCurrentAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
+
+  // Получаем токен из localStorage напрямую
+  const getAccessToken = () => localStorage.getItem('accessToken');
 
   // Эффект для загрузки избранного
   useEffect(() => {
-    if (activeTab === 'favorites' && currentAccessToken) {
-      const fetchFavoriteShops = async () => {
-        setLoadingFavorites(true);
-        setErrorFavorites(null);
-        try {
-          const fetchedFavorites = await api.getShopFavorites(currentAccessToken);
-          setFavoriteShops(fetchedFavorites);
-        } catch (err) {
-          console.error('Failed to fetch favorite shops:', err);
-          setErrorFavorites('Не удалось загрузить избранные магазины.');
-        } finally {
-          setLoadingFavorites(false);
-        }
-      };
-      fetchFavoriteShops();
+    if (activeTab === 'favorites') {
+      const token = getAccessToken();
+      if (token) {
+        const fetchFavoriteShops = async () => {
+          setLoadingFavorites(true);
+          setErrorFavorites(null);
+          try {
+            const fetchedFavorites = await api.getShopFavorites(token);
+            setFavoriteShops(fetchedFavorites);
+          } catch (err) {
+            console.error('Failed to fetch favorite shops:', err);
+            setErrorFavorites('Не удалось загрузить избранные магазины.');
+          } finally {
+            setLoadingFavorites(false);
+          }
+        };
+        fetchFavoriteShops();
+      }
     }
-  }, [activeTab, currentAccessToken]); // Добавили currentAccessToken в зависимости
+  }, [activeTab]);
 
-  // Функция для переключения вкладок
   const handleTabChange = (tab: 'all' | 'favorites') => {
     setActiveTab(tab);
-    // При переключении на вкладку "Избранное" обновляем токен
-    if (tab === 'favorites') {
-      setCurrentAccessToken(localStorage.getItem('accessToken'));
-    }
   };
 
-
-  
   const handleShopClick = (shop: any) => {
     setSelectedShop(shop);
   };
 
   const handleCloseModal = () => {
     setSelectedShop(null);
+  };
+
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category: any) => {
+    console.log('Category clicked:', category.name);
+    // Переход на страницу категории
+    navigate(`/category/${category.slug}`);
   };
   
   const renderShopCard = (shop: any) => (
@@ -108,7 +114,8 @@ const ShopsTab: React.FC<ShopsTabProps> = ({ shops, currentUserId }) => { // У�
     }
 
     if (activeTab === 'favorites') {
-      if (!currentAccessToken) {
+      const token = getAccessToken();
+      if (!token) {
         return <div className="shops-message">Войдите, чтобы просматривать избранные магазины.</div>;
       }
       if (loadingFavorites) {
@@ -127,6 +134,49 @@ const ShopsTab: React.FC<ShopsTabProps> = ({ shops, currentUserId }) => { // У�
 
   return (
     <>
+      {/* Лента категорий с бесконечной прокруткой */}
+      {categories && categories.length > 0 && (
+        <div className="categories-carousel-wrapper">
+          <h2 className="categories-carousel-title">Основные категории</h2>
+          <div className="categories-carousel-container">
+            <div className="categories-carousel">
+              {/* Утраиваем категории для бесконечной прокрутки */}
+              {[...categories, ...categories, ...categories].map((category, index) => (
+                <div 
+                  key={`${category.id}-${index}`} 
+                  className="category-card"
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  {category.icon ? (
+                    <img 
+                      src={category.icon} 
+                      alt={category.name}
+                      className="category-card-image"
+                    />
+                  ) : (
+                    <div style={{
+                      width: '100px',
+                      height: '100px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #df1778 0%, #ff6b9d 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '2rem',
+                      color: 'white',
+                      fontWeight: 'bold'
+                    }}>
+                      {category.name.substring(0, 2)}
+                    </div>
+                  )}
+                  <span className="category-card-name">{category.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="shops-tabs">
         <button 
           className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
@@ -141,6 +191,7 @@ const ShopsTab: React.FC<ShopsTabProps> = ({ shops, currentUserId }) => { // У�
           Избранное
         </button>
       </div>
+      
       <div className="shops-container">
         {renderContent()}
       </div>
@@ -150,7 +201,6 @@ const ShopsTab: React.FC<ShopsTabProps> = ({ shops, currentUserId }) => { // У�
           shop={selectedShop} 
           onClose={handleCloseModal} 
           currentUserId={currentUserId}
-          // token={token} // УДАЛЕНО
         />
       )}
     </>
