@@ -2,7 +2,7 @@
 .footer {
   position: relative;
   width: 100%;
-  background: #df1778; /* Основной цвет футера */
+  background: rgb(255, 180, 216);
   min-height: 100px;
   padding: 20px 50px;
   display: flex;

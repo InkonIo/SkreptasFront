@@ -1,0 +1,348 @@
+/* Unified Auth Styles - Modern Minimalist Design */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Общие стили для всех auth форм */
+.login-container,
+.register-container,
+.forgot-password-container,
+.reset-password-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: #fafafa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Декоративные элементы фона */
+.login-container::before,
+.register-container::before,
+.forgot-password-container::before,
+.reset-password-container::before {
+  content: '';
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #ffb3d9 0%, #ffd9e8 100%);
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  top: -200px;
+  right: -100px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.login-container::after,
+.register-container::after,
+.forgot-password-container::after,
+.reset-password-container::after {
+  content: '';
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #ffc9e0 0%, #ffe4f0 100%);
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  bottom: -150px;
+  left: -100px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Заголовки */
+.login-title,
+.register-title,
+.forgot-password-title,
+.reset-password-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+/* Формы */
+.login-form,
+.register-form,
+.forgot-password-form,
+.reset-password-form {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #e5e5e5;
+  position: relative;
+  z-index: 1;
+}
+
+/* Подзаголовок/описание */
+.login-form p,
+.register-form p,
+.forgot-password-form p,
+.reset-password-form p {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+/* Группы полей */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+/* Инпуты */
+.login-input,
+.register-input,
+.forgot-password-input,
+.reset-password-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.login-input:focus,
+.register-input:focus,
+.forgot-password-input:focus,
+.reset-password-input:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.05);
+}
+
+.login-input::placeholder,
+.register-input::placeholder,
+.forgot-password-input::placeholder,
+.reset-password-input::placeholder {
+  color: #999;
+}
+
+.login-input:disabled,
+.register-input:disabled,
+.forgot-password-input:disabled,
+.reset-password-input:disabled {
+  background: #f8f8f8;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Кнопки submit */
+.login-button,
+.register-button,
+.forgot-password-button,
+.reset-password-button {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.login-button:hover,
+.register-button:hover,
+.forgot-password-button:hover,
+.reset-password-button:hover {
+  background: #333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.login-button:active,
+.register-button:active,
+.forgot-password-button:active,
+.reset-password-button:active {
+  transform: translateY(0);
+}
+
+.login-button:disabled,
+.register-button:disabled,
+.forgot-password-button:disabled,
+.reset-password-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Сообщения об ошибках */
+.login-error,
+.register-error,
+.forgot-password-error,
+.reset-password-error {
+  padding: 0.75rem 1rem;
+  background: #fff5f5;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+/* Сообщения об успехе */
+.login-success,
+.register-success,
+.forgot-password-success,
+.reset-password-success {
+  padding: 0.75rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: #15803d;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+/* Ссылки навигации */
+.login-links,
+.register-links,
+.forgot-password-links,
+.reset-password-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.login-links button,
+.register-links button,
+.forgot-password-links button,
+.reset-password-links button {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  padding: 0.25rem 0.5rem;
+  text-decoration: none;
+}
+
+.login-links button:hover,
+.register-links button:hover,
+.forgot-password-links button:hover,
+.reset-password-links button:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.login-links a,
+.register-links a,
+.forgot-password-links a,
+.reset-password-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.login-links a:hover,
+.register-links a:hover,
+.forgot-password-links a:hover,
+.reset-password-links a:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+/* Разделитель для ссылок */
+.login-links::before,
+.register-links::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #e5e5e5;
+  margin-bottom: 0.5rem;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .login-form,
+  .register-form,
+  .forgot-password-form,
+  .reset-password-form {
+    padding: 2rem 1.5rem;
+  }
+
+  .login-title,
+  .register-title,
+  .forgot-password-title,
+  .reset-password-title {
+    font-size: 1.5rem;
+  }
+
+  .login-input,
+  .register-input,
+  .forgot-password-input,
+  .reset-password-input {
+    padding: 0.75rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .login-button,
+  .register-button,
+  .forgot-password-button,
+  .reset-password-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Специфичные улучшения для модальных окон */
+.auth-modal .login-container,
+.auth-modal .register-container,
+.auth-modal .forgot-password-container,
+.auth-modal .reset-password-container {
+  min-height: auto;
+  padding: 0;
+  background: transparent;
+}
+
+.auth-modal .login-container::before,
+.auth-modal .register-container::before,
+.auth-modal .forgot-password-container::before,
+.auth-modal .reset-password-container::before,
+.auth-modal .login-container::after,
+.auth-modal .register-container::after,
+.auth-modal .forgot-password-container::after,
+.auth-modal .reset-password-container::after {
+  display: none;
+}
+
+.auth-modal .login-form,
+.auth-modal .register-form,
+.auth-modal .forgot-password-form,
+.auth-modal .reset-password-form {
+  box-shadow: none;
+  border: none;
+  margin-top: 2rem;
+}

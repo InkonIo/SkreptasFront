@@ -1,0 +1,837 @@
+/* ShopsTab.css - Premium Modern Design */
+
+:root {
+  --primary-gradient: linear-gradient(135deg, rgba(223, 23, 120, 0.9) 0%, rgba(255, 80, 150, 0.8) 100%);
+  --secondary-gradient: linear-gradient(135deg, rgba(223, 23, 120, 0.1) 0%, rgba(255, 80, 150, 0.05) 100%);
+  --accent-color: rgba(223, 23, 120, 1);
+  --accent-light: rgba(223, 23, 120, 0.1);
+  --accent-medium: rgba(223, 23, 120, 0.3);
+  --text-primary: #1a1a1a;
+  --text-secondary: #666;
+  --border-color: #e5e5e5;
+  --background-light: #ffffff;
+  --background-dark: #fafafa;
+  --shadow-sm: 0 2px 8px rgba(223, 23, 120, 0.08);
+  --shadow-md: 0 4px 16px rgba(223, 23, 120, 0.12);
+  --shadow-lg: 0 8px 24px rgba(223, 23, 120, 0.15);
+}
+
+/* Categories Carousel */
+.categories-carousel-wrapper {
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem;
+  background: var(--secondary-gradient);
+  border-radius: 24px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.categories-carousel-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.categories-carousel-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: var(--primary-gradient);
+  border-radius: 2px;
+}
+
+.categories-carousel-container {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem 0;
+}
+
+.categories-carousel {
+  display: flex;
+  gap: 1.5rem;
+  animation: infiniteScroll 40s linear infinite;
+  width: fit-content;
+}
+
+.categories-carousel:hover {
+  animation-play-state: paused;
+}
+
+@keyframes infiniteScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.category-card {
+  min-width: 150px;
+  max-width: 150px;
+  height: 200px;
+  background: var(--background-light);
+  border-radius: 20px;
+  border: 2px solid transparent;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(white, white) padding-box,
+              var(--secondary-gradient) border-box;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover::before {
+  transform: scaleX(1);
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-medium);
+  box-shadow: var(--shadow-lg);
+}
+
+.category-card-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              var(--primary-gradient) border-box;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.category-card:hover .category-card-image {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--shadow-md);
+}
+
+.category-card-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  word-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.3;
+}
+
+/* Tabs */
+.shops-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.tab-button {
+  padding: 1rem 2.5rem;
+  background: var(--background-light);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--secondary-gradient);
+  transition: left 0.3s ease;
+  z-index: 0;
+}
+
+.tab-button:hover {
+  border-color: var(--accent-medium);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-button:hover::before {
+  left: 0;
+}
+
+.tab-button.active {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-md);
+}
+
+.tab-button.active::before {
+  display: none;
+}
+
+.tab-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Shops Container */
+.shops-container {
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.shops-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: -0.02em;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Shop Card */
+.shop-card {
+  background: var(--background-light);
+  border-radius: 20px;
+  border: 2px solid transparent;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  cursor: pointer;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  background: linear-gradient(white, white) padding-box,
+              var(--secondary-gradient) border-box;
+}
+
+.shop-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.shop-card:hover::before {
+  transform: scaleX(1);
+}
+
+.shop-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.shop-card:hover::after {
+  opacity: 1;
+}
+
+.shop-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-medium);
+}
+
+.shop-card.approved {
+  border-color: var(--accent-light);
+}
+
+.shop-card.pending {
+  border-color: rgba(255, 152, 0, 0.2);
+}
+
+.shop-card.pending:hover {
+  border-color: rgba(255, 152, 0, 0.4);
+}
+
+.shop-content-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.shop-logo-only {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              var(--primary-gradient) border-box;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.shop-card:hover .shop-logo-only {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 30px rgba(223, 23, 120, 0.3);
+}
+
+.shop-logo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.shop-card:hover .shop-logo-placeholder {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 30px rgba(223, 23, 120, 0.3);
+}
+
+.shop-card-details {
+  text-align: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.shop-card-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.shop-card:hover .shop-card-name {
+  color: var(--accent-color);
+}
+
+.shop-card-instagram-link {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  background: var(--secondary-gradient);
+  color: var(--accent-color);
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 2px solid var(--accent-medium);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.shop-card-instagram-link:hover {
+  background: var(--primary-gradient);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.shops-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  background: var(--secondary-gradient);
+  border-radius: 20px;
+  border: 2px dashed var(--accent-medium);
+}
+
+.shops-message.error {
+  color: #dc3545;
+  border-color: rgba(220, 53, 69, 0.3);
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.05) 0%, rgba(220, 53, 69, 0.02) 100%);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 24px;
+  max-width: 700px;
+  width: 90%;
+  border: 2px solid transparent;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(white, white) padding-box,
+              var(--primary-gradient) border-box;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: var(--secondary-gradient);
+  border: 2px solid var(--accent-medium);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-weight: 700;
+}
+
+.close-modal-button:hover {
+  background: var(--primary-gradient);
+  color: white;
+  transform: rotate(90deg);
+  box-shadow: var(--shadow-sm);
+}
+
+.shop-modal-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 2rem 0;
+  text-align: center;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.shop-modal-logo {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  display: block;
+  border: 4px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              var(--primary-gradient) border-box;
+  box-shadow: var(--shadow-lg);
+}
+
+.shop-modal-details {
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.shop-modal-description {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.shop-modal-meta {
+  color: var(--text-primary);
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.shop-modal-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  background: var(--primary-gradient);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  box-shadow: var(--shadow-sm);
+}
+
+.shop-modal-link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.shop-modal-categories {
+  margin-top: 1.5rem;
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.shop-modal-owner {
+  display: block;
+  margin-top: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.shop-modal-status {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  display: inline-block;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+}
+
+.shop-modal-status.approved {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border: 2px solid #155724;
+  box-shadow: 0 2px 8px rgba(21, 87, 36, 0.2);
+}
+
+.shop-modal-status.pending {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  color: #856404;
+  border: 2px solid #856404;
+  box-shadow: 0 2px 8px rgba(133, 100, 4, 0.2);
+}
+
+/* Full-Screen Shop Detail View */
+.full-screen-modal {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(15px);
+}
+
+.shop-detail-content {
+  max-width: 90%;
+  width: 1000px;
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(223, 23, 120, 0.3);
+}
+
+.shop-detail-header {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.shop-logo-wrapper {
+  flex-shrink: 0;
+}
+
+.shop-detail-logo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              var(--primary-gradient) border-box;
+  box-shadow: var(--shadow-lg);
+}
+
+.shop-detail-logo-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  color: white;
+  font-size: 3.5rem;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  box-shadow: var(--shadow-lg);
+}
+
+.shop-info-block {
+  flex-grow: 1;
+}
+
+.shop-detail-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.shop-detail-instagram-link {
+  display: inline-block;
+  color: var(--accent-color);
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.shop-detail-instagram-link:hover {
+  color: var(--accent-color);
+  transform: translateX(3px);
+}
+
+.shop-detail-favorite-button {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.shop-detail-favorite-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .categories-carousel {
+    animation: infiniteScroll 30s linear infinite;
+  }
+
+  .shops-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .categories-carousel-wrapper,
+  .shops-container {
+    padding: 1rem;
+  }
+
+  .categories-carousel {
+    animation: infiniteScroll 25s linear infinite;
+  }
+
+  .category-card {
+    min-width: 120px;
+    max-width: 120px;
+    height: 170px;
+  }
+
+  .category-card-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .categories-carousel-title,
+  .shops-title {
+    font-size: 1.8rem;
+  }
+
+  .shops-tabs {
+    padding: 0 1rem;
+    gap: 0.75rem;
+  }
+
+  .tab-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .shops-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .shop-card {
+    padding: 1.5rem;
+  }
+
+  .shop-logo-only,
+  .shop-logo-placeholder {
+    width: 100px;
+    height: 100px;
+  }
+
+  .shop-card-name {
+    font-size: 1.1rem;
+  }
+
+  .modal-content {
+    padding: 2rem;
+    width: 95%;
+  }
+
+  .shop-modal-title {
+    font-size: 2rem;
+  }
+
+  .shop-modal-logo {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-carousel {
+    animation: infiniteScroll 20s linear infinite;
+  }
+
+  .category-card {
+    min-width: 100px;
+    max-width: 100px;
+    height: 150px;
+  }
+
+  .category-card-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .category-card-name {
+    font-size: 0.85rem;
+  }
+
+  .shops-tabs {
+    flex-direction: column;
+  }
+
+  .tab-button {
+    width: 100%;
+  }
+
+  .shops-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shops-title {
+    font-size: 1.5rem;
+  }
+
+  .shop-logo-only,
+  .shop-logo-placeholder {
+    width: 90px;
+    height: 90px;
+    font-size: 2rem;
+  }
+
+  .shop-card-name {
+    font-size: 1rem;
+  }
+}

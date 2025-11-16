@@ -150,68 +150,75 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
   };
 
   const renderShopDetails = () => (
-    <div className="shop-detail-header">
-      <div className="shop-logo-wrapper">
-        {shop.logoUrl ? (
-          <img 
-            src={shop.logoUrl} 
-            alt={shop.name}
-            className="shop-detail-logo"
-          />
-        ) : (
-          <div className="shop-detail-logo-placeholder">
-            {shop.name.substring(0, 2)}
-          </div>
-        )}
-      </div>
-      <div className="shop-info-block">
-        <h1 className="shop-detail-name">{displayTitle}</h1>
-        {shop.instagramLink && (
-          <a 
-            href={shop.instagramLink} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="shop-detail-instagram-link"
-          >
-            Открыть инстаграм аккаунт 🔗
-          </a>
-        )}
-        
-        <button 
-          className="shop-detail-favorite-button"
-          onClick={handleToggleFavorite}
-          disabled={favoriteLoading}
-        >
-          <span className="heart-icon">{isFavorite ? '❤️' : '♡'}</span> 
-          {isFavorite ? 'Убрать из избранного' : 'Добавить в избранные'}
-        </button>
+  <div 
+    className="shop-detail-header"
+    onClick={(e) => e.stopPropagation()} // останавливаем всплытие для всей карточки
+  >
+    <div className="shop-logo-wrapper">
+      {shop.logoUrl ? (
+        <img 
+          src={shop.logoUrl} 
+          alt={shop.name}
+          className="shop-detail-logo"
+        />
+      ) : (
+        <div className="shop-detail-logo-placeholder">
+          {shop.name.substring(0, 2)}
+        </div>
+      )}
+    </div>
 
-        {currentUserId && shop.owner?.id === currentUserId && (
-          <div className="shop-owner-actions">
-            <p className="shop-owner-message">
-              ✅ **Это Ваш магазин.** Вы можете управлять им через вкладку "Мой магазин".
-            </p>
-          </div>
-        )}
-        
-        <div className="shop-detail-meta-info">
-          <p className="shop-detail-category">
-            Категория: <span>{shop.categories?.map((c: any) => c.name).join(', ') || 'Не указана'}</span>
+    <div className="shop-info-block">
+      <h1 className="shop-detail-name">{displayTitle}</h1>
+
+      {shop.instagramLink && (
+        <a 
+          href={shop.instagramLink} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="shop-detail-instagram-link"
+          onClick={(e) => e.stopPropagation()} // предотвращаем всплытие
+        >
+          Открыть инстаграм аккаунт 🔗
+        </a>
+      )}
+
+      <button 
+        className="shop-detail-favorite-button"
+        onClick={(e) => { e.stopPropagation(); handleToggleFavorite(); }}
+        disabled={favoriteLoading}
+      >
+        <span className="heart-icon">{isFavorite ? '❤️' : '♡'}</span> 
+        {isFavorite ? 'Убрать из избранного' : 'Добавить в избранные'}
+      </button>
+
+      {currentUserId && shop.owner?.id === currentUserId && (
+        <div className="shop-owner-actions">
+          <p className="shop-owner-message">
+            ✅ **Это Ваш магазин.** Вы можете управлять им через вкладку "Мой магазин".
           </p>
-          <h3 className="shop-detail-description-title">Описание:</h3>
-          <div className="shop-detail-description-text">
-            {shop.description ? (
-              shop.description.split('\n').map((line: string, index: number) => (
-                <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
-              ))
-            ) : (
-              <p>Описание отсутствует.</p>
-            )}
-          </div>
+        </div>
+      )}
+
+      <div className="shop-detail-meta-info">
+        <p className="shop-detail-category">
+          Категория: <span>{shop.categories?.map((c: any) => c.name).join(', ') || 'Не указана'}</span>
+        </p>
+        <h3 className="shop-detail-description-title">Описание:</h3>
+        <div className="shop-detail-description-text">
+          {shop.description ? (
+            shop.description.split('\n').map((line: string, index: number) => (
+              <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
+            ))
+          ) : (
+            <p>Описание отсутствует.</p>
+          )}
         </div>
       </div>
     </div>
-  );
+  </div>
+);
+
 
   const renderItemsSection = () => {
     if (loading) {

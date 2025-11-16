@@ -358,3 +358,34 @@ body::after {
     font-size: 0.85rem;
   }
 }
+
+/* Добавьте эти стили в ShopAndUserDashboard.css */
+
+.dashboard-title {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-image {
+  height: 80px; /* Настройте высоту под ваш логотип */
+  width: auto;
+  transition: opacity 0.2s ease;
+}
+
+.logo-image:hover {
+  opacity: 0.8;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+  .logo-image {
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    height: 28px;
+  }
+}

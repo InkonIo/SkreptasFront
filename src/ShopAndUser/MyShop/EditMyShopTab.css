@@ -1,0 +1,176 @@
+/* EditMyShopTab.css - Styles for the Edit Modals */
+
+:root {
+  --primary-color: #df1778; /* From MyShopTab.css */
+  --primary-light: rgba(223, 23, 120, 0.1);
+  --text-primary: #1a1a1a;
+  --text-secondary: #666;
+  --border-color: #e5e5e5;
+  --background-light: #ffffff;
+  --shadow-lg: 0 8px 24px rgba(223, 23, 120, 0.15);
+}
+
+/* --- Modal Overlay and Container --- */
+
+.edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+  backdrop-filter: blur(4px);
+  animation: fadeInOverlay 0.3s ease-out;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.edit-modal-content {
+  background-color: var(--background-light);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  animation: slideInModal 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes slideInModal {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- Modal Header and Close Button --- */
+
+.edit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 0.75rem;
+}
+
+.edit-modal-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.edit-modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.edit-modal-close-btn:hover {
+  color: var(--primary-color);
+}
+
+/* --- Form Elements (Reusing styles from MyShopTab.css for consistency) --- */
+
+.edit-form-input, .edit-form-textarea, .edit-form-select {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-form-input:focus, .edit-form-textarea:focus, .edit-form-select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  background: var(--background-light);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.edit-form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* --- Modal Actions and Buttons --- */
+
+.edit-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.edit-modal-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.edit-modal-btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.edit-modal-btn-primary:hover {
+  background-color: #c41364;
+  box-shadow: 0 4px 12px rgba(223, 23, 120, 0.3);
+}
+
+.edit-modal-btn-secondary {
+  background-color: #f0f0f0;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.edit-modal-btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+/* --- Delete Section --- */
+
+.edit-modal-delete-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+  text-align: right;
+}
+
+.edit-delete-shop-btn, .edit-delete-item-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.edit-delete-shop-btn:hover, .edit-delete-item-btn:hover {
+  background-color: #c82333;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}

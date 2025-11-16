@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../ShopAndUser/css/ShopAndUserDashboard.css';
 import { api } from './ShopAndUserApi';
-import ShopsTab from './ShopsTab';
+import ShopsTab from '../ShopAndUser/ShopsTab/ShopsTab';
 import ItemsTab from './ItemAbout/ItemsTab';
 import FavoritesTab from './FavoritesTab';
-import MyShopTab from './MyShopTab';
+import MyShopTab from './MyShop/MyShopTab';
 import AdminUsers from '../admin/AdminUsers';
 import AdminShops from '../admin/AdminShops';
 import AdminAllShops from '../admin/AdminAllShops';
@@ -14,10 +14,10 @@ import AdminCategories from '../admin/AdminCategories';
 import MainPanel from './MainPanel/MainPanel';
 import Footer from '../footer/footer'; // Импортируем компонент Footer
 
-import Login from '../auth/Login';
-import Register from '../auth/Register';
-import ForgotPassword from '../auth/ForgotPassword';
-import ResetPassword from '../auth/ResetPassword';
+import Login from '../auth/login/Login';
+import Register from '../auth/register/Register';
+import ForgotPassword from '../auth/forgot/ForgotPassword';
+import ResetPassword from '../auth/reset/ResetPassword';
 
 interface ShopAndUserDashboardProps {
   token: string | null;
@@ -191,7 +191,9 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     <div className="dashboard-container">
       {/* Шапка - всегда видна */}
       <div className="dashboard-header">
-        <h1 className="dashboard-title" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Skrepta App</h1>
+        <div className="dashboard-title" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <img src="/logo1.svg" alt="Skrepta App" className="logo-image" />
+        </div>
         <div className="header-links">
           {token && (
             <>
@@ -205,7 +207,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
                 onClick={() => navigate('/my-shop')} 
                 className={`header-link-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
               >
-                🏪 Мой магазин
+                Мой магазин
               </button>
             </>
           )}

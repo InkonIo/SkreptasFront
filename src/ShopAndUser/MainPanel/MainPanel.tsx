@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '../ShopAndUserApi';
-import ShopsTab from '../ShopsTab';
+import ShopsTab from '../ShopsTab/ShopsTab';
 import './MainPanel.css';
 
 interface Shop {

@@ -1,0 +1,292 @@
+/* Улучшенная карусель категорий с навигацией */
+/* Добавьте эти стили в CategoryPage.css или создайте отдельный файл */
+
+.categories-carousel-wrapper {
+  position: relative;
+  margin-bottom: 3rem;
+  padding: 0; /* Убираем отступы, чтобы карусель была шире */
+}
+
+.categories-carousel-container {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1.5rem 2rem; /* Добавляем отступы к внутреннему контейнеру для выравнивания контента */
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.categories-carousel-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.categories-carousel-container.grabbing {
+  cursor: grabbing;
+}
+
+/* Стрелки навигации */
+.carousel-nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-size: 1.2rem;
+  color: #1a1a1a;
+}
+
+.carousel-nav-button:hover {
+  background: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-nav-button:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-nav-button.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.carousel-nav-button.left {
+  left: 2rem; /* Сдвигаем стрелку на 2rem, чтобы она была на одной линии с контентом */
+}
+
+.carousel-nav-button.right {
+  right: 2rem; /* Сдвигаем стрелку на 2rem, чтобы она была на одной линии с контентом */
+}
+
+/* Индикаторы прокрутки */
+.carousel-scroll-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.scroll-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.scroll-dot.active {
+  background: #1a1a1a;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.scroll-dot:hover {
+  background: #999;
+}
+
+/* Карточка категории */
+.category-card {
+  flex: 0 0 auto;
+  width: 200px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 179, 217, 0.05) 0%, rgba(255, 217, 232, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+
+.category-card:hover::before {
+  opacity: 1;
+}
+
+.category-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #d0d0d0;
+}
+
+.category-card:active {
+  transform: translateY(-4px) scale(1);
+}
+
+.category-card-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  border: 2px solid #f0f0f0;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.category-card:hover .category-card-image {
+  transform: scale(1.1) rotate(5deg);
+  border-color: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-card-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Скелетон загрузки */
+.category-card.skeleton {
+  pointer-events: none;
+}
+
+.category-card.skeleton .category-card-image,
+.category-card.skeleton .category-card-name {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  color: transparent;
+  border-radius: 8px;
+}
+
+.category-card.skeleton .category-card-image {
+  border-radius: 50%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+  .categories-carousel-wrapper {
+    padding: 0;
+  }
+
+  .carousel-nav-button.left {
+    left: 1.5rem;
+  }
+
+  .carousel-nav-button.right {
+    right: 1.5rem;
+  }
+
+  .carousel-nav-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .category-card {
+    width: 160px;
+    padding: 1.25rem;
+  }
+
+  .category-card-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .category-card-name {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-carousel-wrapper {
+    padding: 0;
+  }
+
+  .carousel-nav-button.left {
+    left: 1.5rem;
+  }
+
+  .carousel-nav-button.right {
+    right: 1.5rem;
+  }
+
+  .carousel-nav-button {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .category-card {
+    width: 140px;
+    padding: 1rem;
+  }
+
+  .category-card-image {
+    width: 2rem;
+    height: 60px;
+  }
+
+  .category-card-name {
+    font-size: 0.85rem;
+  }
+}
+
+/* Fade эффект по краям карусели */
+  .categories-carousel-wrapper::before,
+.categories-carousel-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.categories-carousel-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #fafafa 0%, transparent 100%);
+}
+
+.categories-carousel-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #fafafa 0%, transparent 100%);
+}
