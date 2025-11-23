@@ -75,6 +75,19 @@ body::after {
   font-weight: 800;
   letter-spacing: -0.5px;
   color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-image {
+  height: 80px;
+  width: auto;
+  transition: opacity 0.2s ease;
+}
+
+.logo-image:hover {
+  opacity: 0.8;
 }
 
 .menu-toggle-button {
@@ -94,8 +107,8 @@ body::after {
   border-color: #d0d0d0;
 }
 
-/* Модальное окно меню */
-.modal-overlay {
+/* ===== БУРГЕР МЕНЮ - переименованные классы ===== */
+.burger-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -111,7 +124,37 @@ body::after {
   animation: fadeIn 0.2s ease-out forwards;
 }
 
-.modal-menu {
+.burger-modal-menu {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  transform: scale(0.95);
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+/* ===== МОДАЛЬНЫЕ ОКНА АВТОРИЗАЦИИ - переименованные классы ===== */
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.auth-modal-menu {
   background: white;
   border: 1px solid #e5e5e5;
   border-radius: 16px;
@@ -329,6 +372,10 @@ body::after {
     font-size: 1.5rem;
   }
 
+  .logo-image {
+    height: 32px;
+  }
+
   .header-links {
     display: none;
   }
@@ -353,39 +400,12 @@ body::after {
     font-size: 1.3rem;
   }
 
+  .logo-image {
+    height: 28px;
+  }
+
   .tab-button {
     padding: 0.6rem 0.9rem;
     font-size: 0.85rem;
-  }
-}
-
-/* Добавьте эти стили в ShopAndUserDashboard.css */
-
-.dashboard-title {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.logo-image {
-  height: 80px; /* Настройте высоту под ваш логотип */
-  width: auto;
-  transition: opacity 0.2s ease;
-}
-
-.logo-image:hover {
-  opacity: 0.8;
-}
-
-/* Для мобильных устройств */
-@media (max-width: 768px) {
-  .logo-image {
-    height: 32px;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-image {
-    height: 28px;
   }
 }

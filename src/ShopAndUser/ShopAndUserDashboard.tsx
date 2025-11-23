@@ -12,7 +12,7 @@ import AdminAllShops from '../admin/AdminAllShops';
 import AdminItems from '../admin/AdminItems';
 import AdminCategories from '../admin/AdminCategories';
 import MainPanel from './MainPanel/MainPanel';
-import Footer from '../footer/footer'; // Импортируем компонент Footer
+import Footer from '../footer/footer';
 
 import Login from '../auth/login/Login';
 import Register from '../auth/register/Register';
@@ -31,7 +31,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Определяем активную вкладку на основе текущего пути
   const getActiveTabFromPath = () => {
     const path = location.pathname;
     if (path === '/') return 'home';
@@ -52,15 +51,28 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
   const [favorites, setFavorites] = useState<any[]>([]);
   const [myShop, setMyShop] = useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   
   type AuthView = 'login' | 'register' | 'forgot-password' | 'reset-password' | null;
   const [activeAuthView, setActiveAuthView] = useState<AuthView>(null);
   const [resetPasswordEmail, setResetPasswordEmail] = useState<string | undefined>(undefined);
 
-  // Синхронизация activeTab с URL
   useEffect(() => {
     setActiveTab(getActiveTabFromPath());
   }, [location.pathname]);
+
+  // Управление открытием/закрытием меню с задержкой
+  useEffect(() => {
+    if (isMenuOpen) {
+      // Небольшая задержка перед рендерингом overlay
+      const timer = setTimeout(() => {
+        setShouldRenderMenu(true);
+      }, 10);
+      return () => clearTimeout(timer);
+    } else {
+      setShouldRenderMenu(false);
+    }
+  }, [isMenuOpen]);
 
   const handleOpenAuthModal = (view: AuthView) => {
     setIsMenuOpen(false);
@@ -207,18 +219,24 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
                 onClick={() => navigate('/my-shop')} 
                 className={`header-link-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
               >
-                Мой магазин
+                🛍️ Мой магазин
               </button>
             </>
           )}
         </div>
-        <button className="menu-toggle-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button 
+          className="menu-toggle-button" 
+          onClick={(e) => {
+            e.stopPropagation(); // ⭐ ВОТ ИСПРАВЛЕНИЕ
+            setIsMenuOpen(!isMenuOpen);
+          }}
+        >
           ☰
         </button>
       </div>
 
       {/* Меню бургер */}
-      {isMenuOpen && (
+      {isMenuOpen && shouldRenderMenu && (
         <div className="modal-overlay" onClick={() => setIsMenuOpen(false)}>
           <div className="modal-menu" onClick={(e) => e.stopPropagation()}>
             <button className="close-menu-button" onClick={() => setIsMenuOpen(false)}>
@@ -359,7 +377,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           <AdminCategories token={token} onLogout={onLogout} />
         )}
       </div>
-      <Footer /> {/* Добавляем футер в самый конец */}
+      <Footer />
     </div>
   );
 };

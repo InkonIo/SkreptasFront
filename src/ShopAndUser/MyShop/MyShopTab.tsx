@@ -314,7 +314,7 @@ const MyShopTab: React.FC<MyShopTabProps> = ({
 
   return (
     <div className="my-shop-container">
-      <h2 className="my-shop-title">🪀 Мой магазин</h2>
+      <h2 className="my-shop-title">🛍️ Мой магазин</h2>
       
       {!myShop ? (
         <div>
