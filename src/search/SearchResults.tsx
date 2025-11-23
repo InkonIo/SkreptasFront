@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { searchApi, SearchResultItem } from './SearchApi';
+import { searchApi, type SearchResultItem } from './SearchApi';
 import ShopDetailView from '../ShopAndUser/ShopDetailView';
 import ItemDetailModal from '../ShopAndUser/ItemAbout/ItemDetailModal/ItemDetailModal';
 import './SearchResults.css';

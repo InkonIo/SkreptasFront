@@ -16,7 +16,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ categories, onCategorySelect }) =
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
-  const debounceTimer = useRef<NodeJS.Timeout>();
+  const debounceTimer = useRef<number | null>(null);
+
+
 
   // Закрываем подсказки при клике вне компонента
   useEffect(() => {

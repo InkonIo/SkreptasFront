@@ -7,6 +7,7 @@ import TermsOfUse from './footer/terms'; // Предполагаем, что ф�
 import AuthRoutes from './auth/AuthRoutes';
 import { api } from './ShopAndUser/ShopAndUserApi';
 import './ShopAndUser/css/ShopAndUserDashboard.css';
+import SearchResults from './search/SearchResults';
 
 // Интерфейс для пользователя
 interface User {
@@ -172,6 +173,19 @@ const App: React.FC = () => {
           } 
         />
 
+        <Route 
+          path="/admin-search" 
+          element={
+            <ShopAndUserDashboard 
+              token={token} 
+              user={user} 
+              onLogout={handleLogout} 
+              onLoginSuccess={handleLoginSuccess}
+              isLanding={false}
+            />
+          } 
+        />
+
         {/* Страница категории */}
         <Route 
           path="/category/:categorySlug" 
@@ -181,7 +195,8 @@ const App: React.FC = () => {
         {/* Маршруты для Политики конфиденциальности и Условий пользования */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-use" element={<TermsOfUse />} />
-
+        {/* Страница результатов поиска */}
+        <Route path="/search" element={<SearchResults />} />
         {/* Маршруты аутентификации */}
         <Route 
           path="/auth/*" 

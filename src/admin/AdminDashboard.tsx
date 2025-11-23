@@ -4,6 +4,7 @@ import AdminShops from './AdminShops';
 import AdminCategories from './AdminCategories.tsx';
 import AdminItems from './AdminItems.tsx';
 import AdminAllShops from './AdminAllShops.tsx';
+import AdminSearch from './AdminSearch.tsx'; // ✅ НОВОЕ
 import MyShop from '../ShopAndUser/MyShop.tsx';
 import './Admin.css';
 
@@ -32,6 +33,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ token, user, onLogout }
         <button onClick={() => setActiveTab('all-shops')}>Все магазины</button>
         <button onClick={() => setActiveTab('categories')}>Категории</button>
         <button onClick={() => setActiveTab('items')}>Товары</button>
+        <button onClick={() => setActiveTab('search')}>🔍 Поиск</button> {/* ✅ НОВАЯ КНОПКА */}
         <button onClick={() => setActiveTab('my-shop')}>Мой магазин</button>
       </nav>
 
@@ -41,6 +43,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ token, user, onLogout }
         {activeTab === 'all-shops' && <AdminAllShops token={token} onLogout={onLogout} />}
         {activeTab === 'categories' && <AdminCategories token={token} onLogout={onLogout} />}
         {activeTab === 'items' && <AdminItems token={token} onLogout={onLogout} />}
+        {activeTab === 'search' && <AdminSearch token={token} onLogout={onLogout} />} {/* ✅ НОВЫЙ КОМПОНЕНТ */}
         {activeTab === 'my-shop' && <MyShop token={token} onLogout={onLogout} />}
       </div>
     </div>

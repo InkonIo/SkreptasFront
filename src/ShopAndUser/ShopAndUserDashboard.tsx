@@ -11,9 +11,10 @@ import AdminShops from '../admin/AdminShops';
 import AdminAllShops from '../admin/AdminAllShops';
 import AdminItems from '../admin/AdminItems';
 import AdminCategories from '../admin/AdminCategories';
+import AdminSearch from '../admin/AdminSearch';
 import MainPanel from './MainPanel/MainPanel';
 import Footer from '../footer/footer';
-
+import SearchBar from '../search/SearchBar';
 import Login from '../auth/login/Login';
 import Register from '../auth/register/Register';
 import ForgotPassword from '../auth/forgot/ForgotPassword';
@@ -41,10 +42,11 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     if (path === '/admin-all-shops') return 'admin-all-shops';
     if (path === '/admin-items') return 'admin-items';
     if (path === '/admin-categories') return 'admin-categories';
+    if (path === '/admin-search') return 'admin-search';
     return 'home';
   };
 
-  const [activeTab, setActiveTab] = useState<'home' | 'favorites' | 'my-shop' | 'admin-users' | 'admin-shops' | 'admin-all-shops' | 'admin-items' | 'admin-categories'>(getActiveTabFromPath());
+  const [activeTab, setActiveTab] = useState<'home' | 'favorites' | 'my-shop' | 'admin-users' | 'admin-shops' | 'admin-all-shops' | 'admin-items' | 'admin-categories' | 'admin-search'>(getActiveTabFromPath());
   const [categories, setCategories] = useState<any[]>([]);
   const [shops, setShops] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
@@ -203,37 +205,42 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     <div className="dashboard-container">
       {/* Шапка - всегда видна */}
       <div className="dashboard-header">
-        <div className="dashboard-title" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-          <img src="/logo1.svg" alt="Skrepta App" className="logo-image" />
-        </div>
-        <div className="header-links">
-          {token && (
-            <>
-              <button 
-                onClick={() => navigate('/favorites')} 
-                className={`header-link-button ${activeTab === 'favorites' ? 'active-primary' : ''}`}
-              >
-                ❤️ Избранное {favorites.length > 0 && `(${favorites.length})`}
-              </button>
-              <button 
-                onClick={() => navigate('/my-shop')} 
-                className={`header-link-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
-              >
-                🛍️ Мой магазин
-              </button>
-            </>
-          )}
-        </div>
+  <div className="dashboard-title" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+    <img src="/logo1.svg" alt="Skrepta App" className="logo-image" />
+  </div>
+  
+  {/* 🔍 НОВОЕ: Умный поиск */}
+  <SearchBar categories={categories} />
+  
+  <div className="header-links">
+    {token && (
+      <>
         <button 
-          className="menu-toggle-button" 
-          onClick={(e) => {
-            e.stopPropagation(); // ⭐ ВОТ ИСПРАВЛЕНИЕ
-            setIsMenuOpen(!isMenuOpen);
-          }}
+          onClick={() => navigate('/favorites')} 
+          className={`header-link-button ${activeTab === 'favorites' ? 'active-primary' : ''}`}
         >
-          ☰
+          ❤️ Избранное {favorites.length > 0 && `(${favorites.length})`}
         </button>
-      </div>
+        <button 
+          onClick={() => navigate('/my-shop')} 
+          className={`header-link-button ${activeTab === 'my-shop' ? 'active-secondary' : ''}`}
+        >
+          🛍️ Мой магазин
+        </button>
+      </>
+    )}
+  </div>
+  
+  <button 
+    className="menu-toggle-button" 
+    onClick={(e) => {
+      e.stopPropagation();
+      setIsMenuOpen(!isMenuOpen);
+    }}
+  >
+    ☰
+  </button>
+</div>
 
       {/* Меню бургер */}
       {isMenuOpen && shouldRenderMenu && (
@@ -335,6 +342,12 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
           >
             🏷️ Категории
           </button>
+          <button 
+            onClick={() => navigate('/admin-search')} 
+            className={`tab-button ${activeTab === 'admin-search' ? 'active-admin' : ''}`}
+          >
+            🔍 Поиск
+          </button>
         </div>
       )}
 
@@ -375,6 +388,9 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
         )}
         {activeTab === 'admin-categories' && token && user?.role === 'ADMIN' && (
           <AdminCategories token={token} onLogout={onLogout} />
+        )}
+        {activeTab === 'admin-search' && token && user?.role === 'ADMIN' && (
+          <AdminSearch token={token} onLogout={onLogout} />
         )}
       </div>
       <Footer />
