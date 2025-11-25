@@ -17,7 +17,6 @@ interface User {
 }
 
 const App: React.FC = () => {
-  // ИСПРАВЛЕНО: Используем accessToken вместо authToken
   const [token, setToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
