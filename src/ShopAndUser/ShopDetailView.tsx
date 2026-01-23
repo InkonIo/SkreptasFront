@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { api } from './ShopAndUserApi';
+import { api, type Item } from './ShopAndUserApi';
 import ItemsTab from './ItemAbout/ItemsTab';
 import '../ShopAndUser/css/ShopDetailView.css';
 
+interface ShopData {
+  id: number;
+  name: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  instagramLink?: string | null;
+  categories?: { id: number; name: string }[];
+  owner?: { id: number; email: string };
+}
+
 interface ShopDetailViewProps {
-  shop: any;
+  shop: ShopData;
   onClose: () => void;
   currentUserId: number | null;
 }
@@ -27,18 +37,17 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
     return null;
   };
 
-  const instagramUsername = extractInstagramUsername(shop.instagramLink);
+  const instagramUsername = shop.instagramLink ? extractInstagramUsername(shop.instagramLink) : null;
   const displayTitle = instagramUsername || shop.name;
 
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
 
-  const [favoriteItems, setFavoriteItems] = useState<any[]>([]);
-  const [loadingFavoriteItems, setLoadingFavoriteItems] = useState(false);
+  const [favoriteItems, setFavoriteItems] = useState<Item[]>([]);
 
   useEffect(() => {
     const fetchShopItems = async () => {
@@ -84,15 +93,12 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
         return;
       }
 
-      setLoadingFavoriteItems(true);
       try {
         const favorites = await api.getFavorites(token);
         setFavoriteItems(favorites);
       } catch (err) {
         console.error('Failed to load favorite items:', err);
         setFavoriteItems([]);
-      } finally {
-        setLoadingFavoriteItems(false);
       }
     };
 
@@ -123,7 +129,7 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
     }
   };
 
-  const handleToggleFavoriteItem = async (itemId: number, isFavorite: boolean) => {
+  const handleToggleFavoriteItem = async (itemId: number, isItemFavorite: boolean) => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
       alert('Войдите, чтобы добавить в избранное');
@@ -131,7 +137,7 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
     }
 
     try {
-      if (isFavorite) {
+      if (isItemFavorite) {
         await api.removeFromFavorites(itemId, token);
         setFavoriteItems(prev => prev.filter(item => item.id !== itemId));
         alert('Удалено из избранного');
@@ -202,7 +208,7 @@ const ShopDetailView: React.FC<ShopDetailViewProps> = ({
 
       <div className="shop-detail-meta-info">
         <p className="shop-detail-category">
-          Категория: <span>{shop.categories?.map((c: any) => c.name).join(', ') || 'Не указана'}</span>
+          Категория: <span>{shop.categories?.map((c) => c.name).join(', ') || 'Не указана'}</span>
         </p>
         <h3 className="shop-detail-description-title">Описание:</h3>
         <div className="shop-detail-description-text">

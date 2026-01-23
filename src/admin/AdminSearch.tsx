@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import api from '../api';
 import './Admin.css';
 
 interface AdminSearchProps {
   token: string;
-  onLogout: () => void;
+  onLogout?: () => void; // Made optional since it's not used
 }
 
-const AdminSearch: React.FC<AdminSearchProps> = ({ token, onLogout }) => {
+const AdminSearch: React.FC<AdminSearchProps> = ({ token }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +33,10 @@ const AdminSearch: React.FC<AdminSearchProps> = ({ token, onLogout }) => {
       const result = await response.text();
       setMessage(result);
       alert('✅ Переиндексация запущена! Проверьте логи сервера.');
-    } catch (err: any) {
-      setError('Ошибка: ' + (err.message || 'Неизвестная ошибка'));
-      alert('❌ Ошибка переиндексации: ' + err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Неизвестная ошибка';
+      setError('Ошибка: ' + message);
+      alert('❌ Ошибка переиндексации: ' + message);
     } finally {
       setLoading(false);
     }
@@ -64,8 +64,9 @@ const AdminSearch: React.FC<AdminSearchProps> = ({ token, onLogout }) => {
       const result = await response.text();
       setMessage(result);
       alert('✅ Переиндексация товаров запущена!');
-    } catch (err: any) {
-      setError('Ошибка: ' + (err.message || 'Неизвестная ошибка'));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Неизвестная ошибка';
+      setError('Ошибка: ' + message);
     } finally {
       setLoading(false);
     }
@@ -93,8 +94,9 @@ const AdminSearch: React.FC<AdminSearchProps> = ({ token, onLogout }) => {
       const result = await response.text();
       setMessage(result);
       alert('✅ Переиндексация магазинов запущена!');
-    } catch (err: any) {
-      setError('Ошибка: ' + (err.message || 'Неизвестная ошибка'));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Неизвестная ошибка';
+      setError('Ошибка: ' + message);
     } finally {
       setLoading(false);
     }

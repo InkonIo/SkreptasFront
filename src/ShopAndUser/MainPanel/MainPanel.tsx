@@ -1,26 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { api } from '../ShopAndUserApi';
+import React, { useState, useEffect } from 'react';
+import { api, type Shop, type Category } from '../ShopAndUserApi';
 import ShopsTab from '../ShopsTab/ShopsTab';
 import './MainPanel.css';
-
-interface Shop {
-  id: number;
-  name: string;
-  description: string;
-  logoUrl: string;
-  city: string;
-  categories: { id: number; name: string }[];
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
 
 const MainPanel: React.FC = () => {
   const [shops, setShops] = useState<Shop[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,15 +28,6 @@ const MainPanel: React.FC = () => {
 
     loadData();
   }, []);
-
-  const filteredShops = useMemo(() => {
-    if (!selectedCategory) {
-      return shops;
-    }
-    return shops.filter(shop => 
-      shop.categories.some(cat => cat.id === selectedCategory)
-    );
-  }, [shops, selectedCategory]);
 
   if (loading) {
     return <div className="main-panel-loading">Загрузка...</div>;

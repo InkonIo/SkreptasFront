@@ -1,11 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { api } from '../ShopAndUserApi';
+import React, { useState } from 'react';
+import { api, type Category } from '../ShopAndUserApi';
 import './EditMyShopTab.css'; // New CSS file for edit styles
 
+interface ShopData {
+  id: number;
+  name: string;
+  description?: string | null;
+  phone: string;
+  instagramLink?: string | null;
+  city: string;
+  address?: string | null;
+  categories: { id: number; name: string }[];
+}
+
+interface ItemData {
+  id: number;
+  title: string;
+  description?: string | null;
+  tags?: string[];
+  city?: string | null;
+  category?: { id: number; name: string };
+}
+
 interface EditMyShopTabProps {
-  myShop: any;
-  categories: any[];
-  items: any[];
+  myShop: ShopData | null;
+  categories: Category[];
   token: string;
   onShopUpdated: () => void;
   onItemUpdated: () => void;
@@ -16,7 +35,6 @@ interface EditMyShopTabProps {
 const EditMyShopTab: React.FC<EditMyShopTabProps> = ({
   myShop,
   categories,
-  items,
   token,
   onShopUpdated,
   onItemUpdated,
@@ -26,17 +44,17 @@ const EditMyShopTab: React.FC<EditMyShopTabProps> = ({
   // State variables for editing
   const [editShopModal, setEditShopModal] = useState(false);
   const [editItemModal, setEditItemModal] = useState(false);
-  const [editingItem, setEditingItem] = useState<any>(null);
+  const [editingItem, setEditingItem] = useState<ItemData | null>(null);
 
   // Edit forms
-  const [editShopForm, setEditShopForm] = useState<any>({
+  const [editShopForm, setEditShopForm] = useState({
     name: '',
     description: '',
     phone: '',
     instagramLink: '',
     city: '',
     address: '',
-    categoryIds: [],
+    categoryIds: [] as number[],
   });
 
   const [editItemForm, setEditItemForm] = useState({
@@ -47,24 +65,7 @@ const EditMyShopTab: React.FC<EditMyShopTabProps> = ({
     categoryId: '',
   });
 
-  // Effect to open the shop edit modal when entering edit mode and myShop is available
-
-
   // --- Shop Editing Logic ---
-
-  const openEditShopModal = () => {
-    if (!myShop) return;
-    setEditShopForm({
-      name: myShop.name,
-      description: myShop.description || '',
-      phone: myShop.phone,
-      instagramLink: myShop.instagramLink || '',
-      city: myShop.city,
-      address: myShop.address || '',
-      categoryIds: myShop.categories.map((c: any) => c.id),
-    });
-    setEditShopModal(true);
-  };
 
   const handleEditShop = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,25 +94,14 @@ const EditMyShopTab: React.FC<EditMyShopTabProps> = ({
       alert('Магазин успешно удален.');
       onShopUpdated();
       onCloseEditMode();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Ошибка удаления магазина:', error);
-      alert('Ошибка при удалении магазина: ' + (error.message || 'Неизвестная ошибка'));
+      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      alert('Ошибка при удалении магазина: ' + message);
     }
   };
 
   // --- Item Editing Logic ---
-
-  const openEditItemModal = (item: any) => {
-    setEditingItem(item);
-    setEditItemForm({
-      title: item.title,
-      description: item.description || '',
-      tags: item.tags ? item.tags.join(', ') : '',
-      city: item.city || '',
-      categoryId: item.category?.id?.toString() || '',
-    });
-    setEditItemModal(true);
-  };
 
   const handleEditItem = async (e: React.FormEvent) => {
     e.preventDefault();

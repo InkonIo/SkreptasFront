@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../ShopAndUserApi';
+import { api, type Shop, type Category } from '../ShopAndUserApi';
 import ShopsTab from '../ShopsTab/ShopsTab';
 import './CategoryPage.css';
 
@@ -8,9 +8,8 @@ const CategoryPage: React.FC = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
   const navigate = useNavigate();
   
-  const [shops, setShops] = useState<any[]>([]);
-  const [allCategories, setAllCategories] = useState<any[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<any | null>(null);
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,10 +22,8 @@ const CategoryPage: React.FC = () => {
           api.getCategories(),
         ]);
         
-        setAllCategories(categoriesData);
-        
         // Находим текущую категорию по slug
-        const category = categoriesData.find((cat: any) => cat.slug === categorySlug);
+        const category = categoriesData.find((cat) => cat.slug === categorySlug);
         
         if (!category) {
           setError('Категория не найдена');
@@ -37,8 +34,8 @@ const CategoryPage: React.FC = () => {
         setCurrentCategory(category);
         
         // Фильтруем магазины по категории
-        const filteredShops = shopsData.filter((shop: any) => 
-          shop.categories && shop.categories.some((cat: any) => cat.id === category.id)
+        const filteredShops = shopsData.filter((shop) => 
+          shop.categories && shop.categories.some((cat) => cat.id === category.id)
         );
         
         setShops(filteredShops);
@@ -84,9 +81,9 @@ const CategoryPage: React.FC = () => {
           ← Назад
         </button>
         <div className="category-info">
-          {currentCategory?.icon && (
+          {currentCategory?.iconUrl && (
             <img 
-              src={currentCategory.icon} 
+              src={currentCategory.iconUrl} 
               alt={currentCategory.name}
               className="category-header-image"
             />

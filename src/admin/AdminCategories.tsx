@@ -44,8 +44,9 @@ const AdminCategories: React.FC<AdminCategoriesProps> = ({ token, onLogout }) =>
     try {
       const data = await api.getCategories();
       setCategories(data);
-    } catch (err: any) {
-      setError('Ошибка загрузки категорий: ' + (err.message || 'Неизвестная ошибка'));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Неизвестная ошибка';
+      setError('Ошибка загрузки категорий: ' + message);
     } finally {
       setLoading(false);
     }
@@ -89,19 +90,20 @@ const AdminCategories: React.FC<AdminCategoriesProps> = ({ token, onLogout }) =>
     formData.append('file', selectedFile);
 
     try {
-      const response = await api.uploadCategoryIcon(categoryId, formData, token);
+      await api.uploadCategoryIcon(categoryId, formData, token);
       alert('Иконка успешно загружена!');
       setSelectedFile(null);
       setPreviewUrl(null);
       setEditingIconId(null);
       loadCategories();
-    } catch (err: any) {
-      if (err.status === 403 || (err.message && err.message.includes('403'))) {
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string };
+      if (error.status === 403 || (error.message && error.message.includes('403'))) {
         alert('Доступ запрещен. Вы будете перенаправлены на страницу входа.');
         onLogout();
         return;
       }
-      alert('Ошибка загрузки иконки: ' + (err.message || 'Неизвестная ошибка'));
+      alert('Ошибка загрузки иконки: ' + (error.message || 'Неизвестная ошибка'));
     } finally {
       setUploadingIcon(false);
     }
@@ -126,7 +128,8 @@ const AdminCategories: React.FC<AdminCategoriesProps> = ({ token, onLogout }) =>
         } catch (iconErr) {
           iconUploadSuccess = false;
           console.error('Ошибка при загрузке иконки:', iconErr);
-          alert('Категория создана, но произошла ошибка при загрузке иконки: ' + (iconErr as any).message);
+          const message = iconErr instanceof Error ? iconErr.message : 'Неизвестная ошибка';
+          alert('Категория создана, но произошла ошибка при загрузке иконки: ' + message);
         }
       }
 
@@ -138,13 +141,14 @@ const AdminCategories: React.FC<AdminCategoriesProps> = ({ token, onLogout }) =>
       setSelectedFile(null);
       setPreviewUrl(null);
       loadCategories();
-    } catch (err: any) {
-      if (err.status === 403 || (err.message && err.message.includes('403'))) {
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string };
+      if (error.status === 403 || (error.message && error.message.includes('403'))) {
         alert('Доступ запрещен. Вы будете перенаправлены на страницу входа.');
         onLogout();
         return;
       }
-      alert('Ошибка создания категории: ' + (err.message || 'Неизвестная ошибка'));
+      alert('Ошибка создания категории: ' + (error.message || 'Неизвестная ошибка'));
     }
   };
 
@@ -154,13 +158,14 @@ const AdminCategories: React.FC<AdminCategoriesProps> = ({ token, onLogout }) =>
       await api.deleteCategory(categoryId, token);
       alert('Категория удалена!');
       loadCategories();
-    } catch (err: any) {
-      if (err.status === 403 || (err.message && err.message.includes('403'))) {
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string };
+      if (error.status === 403 || (error.message && error.message.includes('403'))) {
         alert('Доступ запрещен. Вы будете перенаправлены на страницу входа.');
         onLogout();
         return;
       }
-      alert('Ошибка удаления категории: ' + (err.message || 'Неизвестная ошибка'));
+      alert('Ошибка удаления категории: ' + (error.message || 'Неизвестная ошибка'));
     }
   };
 
@@ -169,13 +174,14 @@ const AdminCategories: React.FC<AdminCategoriesProps> = ({ token, onLogout }) =>
       await api.updateCategory(categoryId, { isActive: !currentStatus }, token);
       alert(`Категория ${!currentStatus ? 'активирована' : 'деактивирована'}!`);
       loadCategories();
-    } catch (err: any) {
-      if (err.status === 403 || (err.message && err.message.includes('403'))) {
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string };
+      if (error.status === 403 || (error.message && error.message.includes('403'))) {
         alert('Доступ запрещен. Вы будете перенаправлены на страницу входа.');
         onLogout();
         return;
       }
-      alert('Ошибка обновления категории: ' + (err.message || 'Неизвестная ошибка'));
+      alert('Ошибка обновления категории: ' + (error.message || 'Неизвестная ошибка'));
     }
   };
 

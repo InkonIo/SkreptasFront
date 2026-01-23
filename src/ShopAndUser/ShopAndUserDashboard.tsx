@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../ShopAndUser/css/ShopAndUserDashboard.css';
-import { api } from './ShopAndUserApi';
-import ShopsTab from '../ShopAndUser/ShopsTab/ShopsTab';
-import ItemsTab from './ItemAbout/ItemsTab';
+import { api, type Category, type Item, type Shop } from './ShopAndUserApi';
 import FavoritesTab from './FavoritesTab';
 import MyShopTab from './MyShop/MyShopTab';
 import AdminUsers from '../admin/AdminUsers';
@@ -20,11 +18,17 @@ import Register from '../auth/register/Register';
 import ForgotPassword from '../auth/forgot/ForgotPassword';
 import ResetPassword from '../auth/reset/ResetPassword';
 
+interface User {
+  id: number;
+  email: string;
+  role: 'USER' | 'SHOP' | 'ADMIN';
+}
+
 interface ShopAndUserDashboardProps {
   token: string | null;
-  user: any;
+  user: User | null;
   onLogout: () => void;
-  onLoginSuccess: (token: string, user: any) => void;
+  onLoginSuccess: (token: string, user: User) => void;
   isLanding: boolean;
 }
 
@@ -32,7 +36,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
   const navigate = useNavigate();
   const location = useLocation();
   
-  const getActiveTabFromPath = () => {
+  const getActiveTabFromPath = useCallback(() => {
     const path = location.pathname;
     if (path === '/') return 'home';
     if (path === '/favorites') return 'favorites';
@@ -44,14 +48,13 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     if (path === '/admin-categories') return 'admin-categories';
     if (path === '/admin-search') return 'admin-search';
     return 'home';
-  };
+  }, [location.pathname]);
 
   const [activeTab, setActiveTab] = useState<'home' | 'favorites' | 'my-shop' | 'admin-users' | 'admin-shops' | 'admin-all-shops' | 'admin-items' | 'admin-categories' | 'admin-search'>(getActiveTabFromPath());
-  const [categories, setCategories] = useState<any[]>([]);
-  const [shops, setShops] = useState<any[]>([]);
-  const [items, setItems] = useState<any[]>([]);
-  const [favorites, setFavorites] = useState<any[]>([]);
-  const [myShop, setMyShop] = useState<any>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [favorites, setFavorites] = useState<Item[]>([]);
+  const [myShop, setMyShop] = useState<Shop | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   
@@ -61,7 +64,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
 
   useEffect(() => {
     setActiveTab(getActiveTabFromPath());
-  }, [location.pathname]);
+  }, [getActiveTabFromPath]);
 
   // Управление открытием/закрытием меню с задержкой
   useEffect(() => {
@@ -87,55 +90,29 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     setResetPasswordEmail(undefined);
   };
 
-  const handleAuthSuccess = (token: string, user: any) => {
+  const handleAuthSuccess = () => {
     handleCloseAuthModal();
   };
 
-  useEffect(() => {
-    if (isLanding && !token) {
-	    loadCategories();
-	    loadShops();
-	    loadItems();
-	    return;
-	  }
-
-	  loadCategories();
-	  loadShops();
-	  loadItems();
-	  loadFavorites();
-    if (token) {
-      loadMyShop();
-    }
-  }, [user, token]);
-
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       const data = await api.getCategories();
       setCategories(data);
     } catch (error) {
       console.error('Ошибка загрузки категорий:', error);
     }
-  };
+  }, []);
 
-  const loadShops = async () => {
-    try {
-      const data = await api.getShops();
-      setShops(data);
-    } catch (error) {
-      console.error('Ошибка загрузки магазинов:', error);
-    }
-  };
-
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     try {
       const data = await api.getItems();
       setItems(data);
     } catch (error) {
       console.error('Ошибка загрузки товаров:', error);
     }
-  };
+  }, []);
 
-  const loadFavorites = async () => {
+  const loadFavorites = useCallback(async () => {
     if (!token) return;
 
     try {
@@ -144,17 +121,33 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
     } catch (error) {
       console.error('Ошибка загрузки избранного:', error);
     }
-  };
+  }, [token]);
 
-  const loadMyShop = async () => {
+  const loadMyShop = useCallback(async () => {
+    if (!user) return;
     try {
       const allShops = await api.getShops();
-      const userShop = allShops.find((s: any) => s.owner?.email === user.email);
+      const userShop = allShops.find((s) => s.owner?.email === user.email);
       setMyShop(userShop || null);
     } catch (error) {
       console.error('Ошибка загрузки моего магазина:', error);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (isLanding && !token) {
+      loadCategories();
+      loadItems();
+      return;
+    }
+
+    loadCategories();
+    loadItems();
+    loadFavorites();
+    if (token) {
+      loadMyShop();
+    }
+  }, [isLanding, token, loadCategories, loadItems, loadFavorites, loadMyShop]);
 
   const handleToggleFavorite = async (itemId: number, isFavorite: boolean) => {
     if (!token) {
@@ -178,7 +171,6 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
 
   const handleShopCreated = () => {
     loadMyShop();
-    loadShops();
   };
 
   const handleItemCreated = () => {
@@ -280,7 +272,7 @@ const ShopAndUserDashboard: React.FC<ShopAndUserDashboardProps> = ({ token, user
             </button>
             {activeAuthView === 'login' && (
               <Login 
-                onLoginSuccess={(token: string, user: any) => { handleAuthSuccess(token, user); onLoginSuccess(token, user); }}
+                onLoginSuccess={(loginToken: string, loginUser: User) => { handleAuthSuccess(); onLoginSuccess(loginToken, loginUser); }}
                 onSwitchView={setActiveAuthView}
               />
             )}
